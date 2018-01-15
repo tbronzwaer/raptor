@@ -1,20 +1,15 @@
 /*
  * Radboud Polarized Integrator
  * Copyright 2014-2020 Black Hole Cam (ERC Synergy Grant)
- * Authors: Thomas Bronzwaer, Jordy Davelaar,  Monika Mościbrodzka
+ * Authors: Thomas Bronzwaer, Jordy Davelaar, Monika Mościbrodzka
  *
  */
-
 
 #include "functions.h"
 #include "parameters.h"
 #include "constants.h"
-//#include "raptor_BHAC3D_model.h"
 
-//#include "vr-functions.h"
 // Updates the vector y (containing position/velocity) by one RK4 step.
-
-
 void rk4_step(real *y, real dt){
         // Array containing all "update elements" (4 times Nelements because RK4)
         real dx[DIM * 2 * 4];
@@ -158,7 +153,7 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
         real thetadot_prev;
         real X_u[4], k_u[4];
         real tau[num_indices];
-	real alpha,beta;
+        real alpha,beta;
         for( f = 0; f < num_indices; f++)
                 tau[f]=0.0;
 
@@ -184,10 +179,6 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
         for( i=0; i<8; i++)
                 photon_u[i]=0;
 
-        //   real norm1 = -CAM_SIZE_X * 0.5 + (IMG_WIDTH + 0.5) * stepx;
-        //   real norm2 = -CAM_SIZE_Y * 0.5 + (IMG_HEIGHT + 0.5) * stepy;
-        //   alpha = sign(alpha)*CAM_SIZE_X * 0.5*(exp(2*fabs(alpha)/(CAM_SIZE_X * 0.5))-1.)/(exp(2*fabs(norm1) /(CAM_SIZE_Y * 0.5))-1.);
-        //   beta  = sign(beta) *CAM_SIZE_Y * 0.5*(exp(2*fabs(beta) /(CAM_SIZE_Y * 0.5))-1.)/(exp(2*fabs(norm2) /(CAM_SIZE_Y * 0.5))-1.);
         // Create initial ray conditions
 
 #if (LINEAR_IMPACT_CAM)
@@ -205,8 +196,6 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
 #endif
         initialize_photon(alpha, beta, photon_u, t_init);
 
-
-
         LOOP_i {
                 X_u[i] = photon_u[i];
         }
@@ -215,10 +204,6 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
 #if (GEOD)
         fprintf(geod,"%e %e %e\n",X_u[1],X_u[2],X_u[3]);
 #endif
-
-
-//    for(f =0;f<num_indices;f++)
-//      intensityfield2[icur][f]=0.0;
 
         // Current r-coordinate
         real r_current = logscale ? exp(photon_u[1]) : photon_u[1];
@@ -289,7 +274,6 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
 
                 r_current = logscale ? exp(photon_u[1]) : photon_u[1];
 
-
 #if (RAD_TRANS)
                 if(X_u[1] < stopx[1] && X_u[1] > startx[1] && X_u[2] > startx[2] && X_u[2] < stopx[2])
                         radiative_transfer(X_u,k_u,lightpath[8], frequencies,icur,intensityfield2,tau,p);
@@ -303,7 +287,6 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
                 lambda += fabs(dlambda_adaptive);
                 r_current = logscale ? exp(photon_u[1]) : photon_u[1];
                 steps = steps + 1;
-
 
         }
 #if (GEOD)
