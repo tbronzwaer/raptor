@@ -12,7 +12,7 @@ ifeq ($(OPENACC),1)
 else
 	CC = gcc
 	CFLAGS = -fopenmp -std=c99 -I/usr/include -Ofast -Wno-unused-result
-	LDFLAGS = -lm -lgsl -lcblas -lpng
+	LDFLAGS = -lm -lgsl -lcblas
 endif
 else
 	CC = pgcc
@@ -20,16 +20,12 @@ else
 	LDFLAGS = -lm -lgsl -lcblas
 endif
 
-
-
-
 SRCHARM=main.c core.c GRmath.c integrator.c metric.c radiative_transfer.c raptor_harm_model.c utilities.c  j_nu.c  rcarry.c newtonraphson.c
 OBJHARM=main.o core.o GRmath.o integrator.o metric.o radiative_transfer.o raptor_harm_model.o utilities.o  j_nu.o  rcarry.o newtonraphson.o
 HDRHARM=raptor_harm_model.h
 
 harm: $(OBJHARM) makefile
 	$(CC) $(CFLAGS) -o RAPTOR $(OBJHARM) $(LDFLAGS)
-
 
 clean:
 	rm *.o
