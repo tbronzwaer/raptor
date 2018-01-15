@@ -44,8 +44,8 @@ typedef double real;
 // OUTPUT SWITCHES
 ////////////////////
 
-#define VTKFILE (0)
-#define IMGFILE (1)
+#define VTKFILE (1)
+#define IMGFILE (0)
 #define SPECFILE (1)
 
 #define RAD_TRANS (1)
@@ -58,11 +58,11 @@ typedef double real;
 #define maxsize 1000000
 
 #define VRCAM (0)
-#define NORMCAM (1)
+#define NORMCAM (0)
 
 #define IMPACT_CAM (1)
-#define LOG_IMPACT_CAM (0)
-#define LINEAR_IMPACT_CAM (1)
+#define LOG_IMPACT_CAM (1)
+#define LINEAR_IMPACT_CAM (0)
 
 #define STATIONARY_CAM (1)
 #define MOVING_CAM (0)

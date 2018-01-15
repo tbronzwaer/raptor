@@ -1,6 +1,6 @@
 /*
  * Radboud Polarized Integrator v1.0
- * Copyright 2014-2020 Black Hole Cam (ERC Synergy Grant)
+ * Copyright 2014-2020 Black Hole Cam (ERC Synergy Grant 610058)
  * Authors: Thomas Bronzwaer, Jordy Davelaar, Monika Moscibrodzka, Ziri Younsi
  *             ___  ___   ___  __________  ___
  *            / _ \/ _ | / _ \/_  __/ __ \/ _ \
@@ -103,6 +103,9 @@ int main(int argc, char *argv[]){
 
         fprintf(stderr,"\nDone with output\n");
         print_time(start);
+
+        // FREE ALLOCATED POINTERS
+        //////////////////////////
 
         free(intensityfield); free(p);
 

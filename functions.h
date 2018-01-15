@@ -179,7 +179,7 @@ void set_constants(real t);
 void write_image(FILE *imgfile, real **intensityfield,int f, real scalefactor);
 
 // Write the arrays "intensityfield" (scaled by "scalefactor") and "lambdafield" to a VTK file
-void write_VTK_image(FILE *imgfile, real *intensityfield, real *lambdafield, real scalefactor);
+void write_VTK_image(FILE *imgfile, real **intensityfield,int f, real scalefactor);
 
 // prints time with respect to a start time
 void print_time(int start);

@@ -65,6 +65,7 @@ void read_model( char *argv[]){
         fprintf(stderr,"NUM OF FREQS \t= %d \n",num_indices);
         fprintf(stderr,"STEPSIZE \t= %g \n", STEPSIZE);
         fclose (input);
+
         printf("Done!\n");
 
         initrcarry(982451653);
@@ -110,18 +111,18 @@ void calculate_image( real ** intensityfield, real energy_spectrum[num_indices],
 
                 diff=clock()-startgpu;
                 int msec = diff *1000/ (CLOCKS_PER_SEC*20);
-                printf("Done: %.02g %%, speed: %.02g [geodesics/sec]\n", 100*l2/((real)(IMG_WIDTH)*(IMG_HEIGHT)),(real)l2 /((real)msec/1000.));
+                printf("Done: %.02lf %%, speed: %.02g [geodesics/sec]\n", 100.*(real)l2/((real)(IMG_WIDTH)*(IMG_HEIGHT)),(real)l2 /((real)msec/1000.));
                 for(int k  = l1; k < l2; k++) { // For all pixel rows (distributed over threads)...
                         for(int fr=0; fr<num_indices; fr++) {
 #if (LOG_IMPACT_CAM)
                                 int y=(int)(k/IMG_WIDTH);
                                 int x=(int)(k%IMG_WIDTH);
 
-                                real r_i = exp(log(1000.)*(real)(x+0.5) /(real) IMG_WIDTH) - 1.;
+                                real r_i = exp(log(20.)*(real)(x+0.5) /(real) IMG_WIDTH) - 1.;
                                 real theta_i = 2.*M_PI  * (real)(y+0.5)/ (real)IMG_HEIGHT;
                                 real alpha = r_i * cos(theta_i);
                                 real beta  = r_i * sin(theta_i);
-                                real d_r = R_GRAV * (r_i +1.) * log(1000.)/(real)IMG_WIDTH;
+                                real d_r = R_GRAV * (r_i +1.) * log(20.)/(real)IMG_WIDTH;
                                 real d_theta = R_GRAV*2.* M_PI / (real)IMG_HEIGHT;
 
                                 intensityfield[k][fr]=intensityfield2[k-l1][fr] * pow(frequencies[fr], 3.)* r_i* d_r * d_theta/(source_dist*source_dist); // * e2_c;
@@ -172,12 +173,12 @@ void output_files(real ** intensityfield,real energy_spectrum[num_indices],real 
 
                 sprintf(vtk_filename, "%s/img_data_%d_%e_%.02lf.vtk",spec_folder,(int)TIME_INIT,frequencies[f],INCLINATION);
                 FILE *fp          = fopen(vtk_filename, "w");
-                write_VTK_image(fp, intensityfield[f], lambdafield, JANSKY_FACTOR);
-                fclose(fp)
+                write_VTK_image(fp, intensityfield,f,JANSKY_FACTOR);
+                fclose(fp);
 #endif
 
 
-                //               fprintf(stderr,"Frequency %.5e Integrated flux density = %.5e\n", frequencies[f],JANSKY_FACTOR * energy_spectrum[f]);
+                fprintf(stderr,"Frequency %.5e Integrated flux density = %.5e\n", frequencies[f],JANSKY_FACTOR * energy_spectrum[f]);
 
 #if (SPECFILE)
                 fprintf(spectrum, "%+.15e\t%+.15e\n", frequencies[f], JANSKY_FACTOR * energy_spectrum[f]);

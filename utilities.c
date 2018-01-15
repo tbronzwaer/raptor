@@ -30,12 +30,8 @@ void set_constants(real t){
         // Calibration constant for the spectral irradiance
         // We want Jansky/pixel^2.
         real delta_x, delta_y, d_x,d_y;
-#if (VRCAM)
-        delta_x= 2*M_PI*rcam_t*R_GRAV/source_dist;
-        delta_y= M_PI*rcam_t *R_GRAV/source_dist;
-        d_x =1;
-        d_y=1;
-#elif (NORMCAM)
+
+#if (NORMCAM)
         d_x     = CAM_SIZE_X * R_GRAV; // Size of image in cm
         delta_x = d_x / source_dist; // it is far away so just a ratio without tan
         d_y     = CAM_SIZE_Y * R_GRAV; // Size of image in cm
@@ -73,7 +69,7 @@ void write_image(FILE *imgfile, real **intensityfield,int f, real scalefactor){
         }
 }
 
-void write_VTK_image(FILE *fp, real *intensityfield, real *lambdafield, real scalefactor){
+void write_VTK_image(FILE *fp, real **intensityfield, int f,real *lambdafield, real scalefactor){
         int i, j;
         real stepx = CAM_SIZE_X / (real) IMG_WIDTH;
         real stepy = CAM_SIZE_Y / (real) IMG_HEIGHT;
@@ -89,7 +85,7 @@ void write_VTK_image(FILE *fp, real *intensityfield, real *lambdafield, real sca
                         real xx = -CAM_SIZE_X * 0.5 + (i + 0.5) * stepx;
                         real yy = -CAM_SIZE_Y * 0.5 + (j + 0.5) * stepy;
 #elif (LOG_IMPACT_CAM)
-                        real r_i = exp(log(1000.)*(real)(j+0.5) /(real) IMG_WIDTH) - 1.;
+                        real r_i = exp(log(20.)*(real)(j+0.5) /(real) IMG_WIDTH) - 1.;
                         real theta_i = 2.*M_PI  * (real)(i+0.5)/ (real)IMG_HEIGHT;
 
                         real xx = r_i * cos(theta_i);
@@ -104,8 +100,8 @@ void write_VTK_image(FILE *fp, real *intensityfield, real *lambdafield, real sca
         real flux=0.0;
         for(i = 0; i < IMG_WIDTH; i++)
                 for(j = 0; j < IMG_HEIGHT; j++) {
-                        flux += scalefactor * intensityfield[i + j * IMG_WIDTH];
-                        fprintf(fp, "%+.15e\n", scalefactor * intensityfield[i + j * IMG_WIDTH]);
+                        flux += scalefactor * intensityfield[i + j * IMG_WIDTH][f];
+                        fprintf(fp, "%+.15e\n", scalefactor * intensityfield[i + j * IMG_WIDTH][f]);
                 }
         //   fprintf(fp, "SCALARS lambda float\n");
         //   fprintf(fp, "LOOKUP_TABLE default\n");
@@ -113,5 +109,5 @@ void write_VTK_image(FILE *fp, real *intensityfield, real *lambdafield, real sca
         //       for(i = 0; i < IMG_WIDTH; i++){
         //           fprintf(fp, "%+.15e\n", lambdafield[i + j * IMG_WIDTH]);
         //       }
-        fprintf(stderr,"Integrated flux density = %.5e\n", flux);
+        //     fprintf(stderr,"Integrated flux density = %.5e\n", flux);
 }

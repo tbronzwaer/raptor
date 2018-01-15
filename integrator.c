@@ -188,7 +188,7 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
 #elif (LOG_IMPACT_CAM)
         real stepx = CAM_SIZE_X / (real) IMG_WIDTH;
         real stepy = CAM_SIZE_Y / (real) IMG_HEIGHT;
-        real r_i = exp(log(1000.)*(real)(x+0.5)/((real)IMG_WIDTH)) - 1.;
+        real r_i = exp(log(20.)*(real)(x+0.5)/((real)IMG_WIDTH)) - 1.;
         real theta_i = 2.0*M_PI  * (real)(y+0.5)/((real)IMG_HEIGHT);
         alpha = r_i * cosf(theta_i);
         beta  = r_i * sinf(theta_i);
