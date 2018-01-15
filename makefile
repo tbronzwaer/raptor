@@ -23,9 +23,9 @@ endif
 
 
 
-SRCHARM=img_renderer.c core.c GRmath.c integrator.c metric.c radiative_transfer.c raptor_harm_model.c utilities.c  j_nu.c  rcarry.c newtonraphson.c
-OBJHARM=img_renderer.o core.o GRmath.o integrator.o metric.o radiative_transfer.o raptor_harm_model.o utilities.o  j_nu.o  rcarry.o newtonraphson.o
-HDRHARM=raptor_harm_model.h 
+SRCHARM=main.c core.c GRmath.c integrator.c metric.c radiative_transfer.c raptor_harm_model.c utilities.c  j_nu.c  rcarry.c newtonraphson.c
+OBJHARM=main.o core.o GRmath.o integrator.o metric.o radiative_transfer.o raptor_harm_model.o utilities.o  j_nu.o  rcarry.o newtonraphson.o
+HDRHARM=raptor_harm_model.h
 
 harm: $(OBJHARM) makefile
 	$(CC) $(CFLAGS) -o RAPTOR $(OBJHARM) $(LDFLAGS)
