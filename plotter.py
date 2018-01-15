@@ -23,7 +23,7 @@ for i in range (0,1):
 	flux = 0.
 	Nimg= i #*25 + 1000
 	data=np.loadtxt('test.dat')+1e-20
-
+	print np.size(data)
 	if(img_size!=img_size2):
 		xi = np.linspace(0,img_size,img_size2)
 		yi = np.linspace(0,img_size,img_size2)

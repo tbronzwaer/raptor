@@ -78,7 +78,7 @@ void write_VTK_image(FILE *fp, real **intensityfield, int f,real *lambdafield, r
         fprintf(fp, "ASCII\n");
         fprintf(fp, "DATASET STRUCTURED_GRID\n");
         fprintf(fp, "DIMENSIONS %d %d %d\n", IMG_WIDTH, IMG_HEIGHT, 1);
-        fprintf(fp, "POINTS %d float\n", IMG_WIDTH * IMG_HEIGHT);
+        fprintf(fp, "POINTS %d float\n", (IMG_WIDTH) *(IMG_HEIGHT));
         for(j = 0; j < IMG_WIDTH; j++)
                 for(i = 0; i < IMG_HEIGHT; i++) {
 #if (LINEAR_IMPACT_CAM)
@@ -92,7 +92,7 @@ void write_VTK_image(FILE *fp, real **intensityfield, int f,real *lambdafield, r
                         real yy  = r_i * sin(theta_i);
 #endif
 
-                        fprintf(fp, "%g %g %g\n", xx, yy, 0.0);
+                        fprintf(fp, "%.20e %.20e %.20e\n", xx, yy, 0.0);
                 }
         fprintf(fp, "\nPOINT_DATA %d\n", IMG_WIDTH * IMG_HEIGHT);
         fprintf(fp, "SCALARS Intensity float\n");
@@ -101,8 +101,9 @@ void write_VTK_image(FILE *fp, real **intensityfield, int f,real *lambdafield, r
         for(i = 0; i < IMG_WIDTH; i++)
                 for(j = 0; j < IMG_HEIGHT; j++) {
                         flux += scalefactor * intensityfield[i + j * IMG_WIDTH][f];
-                        fprintf(fp, "%+.15e\n", scalefactor * intensityfield[i + j * IMG_WIDTH][f]);
+                        fprintf(fp, "%+.15e\n", sqrt(scalefactor * intensityfield[i + j * IMG_WIDTH][f]));
                 }
+        //   fprintf(fp, "%+.15e\n", sqrt(scalefactor * intensityfield[i + j * IMG_WIDTH][f])); // to close the vtk gap
         //   fprintf(fp, "SCALARS lambda float\n");
         //   fprintf(fp, "LOOKUP_TABLE default\n");
         //   for(j = 0; j < IMG_WIDTH; j++)

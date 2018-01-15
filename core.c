@@ -74,7 +74,8 @@ void read_model( char *argv[]){
 
 void calculate_image( real ** intensityfield, real energy_spectrum[num_indices],real frequencies[num_indices]){
 
-        int lmax = IMG_HEIGHT*IMG_WIDTH/maxsize;
+        int lmax = (int)((real)IMG_HEIGHT*IMG_WIDTH/(real)maxsize + 0.5);
+        printf("%d %d %d\n",lmax,maxsize,IMG_HEIGHT*IMG_WIDTH);
         if(lmax==0)
                 lmax=1.;
         static real intensityfield2[maxsize][num_indices];
@@ -111,13 +112,12 @@ void calculate_image( real ** intensityfield, real energy_spectrum[num_indices],
 
                 diff=clock()-startgpu;
                 int msec = diff *1000/ (CLOCKS_PER_SEC*20);
-                printf("Done: %.02lf %%, speed: %.02g [geodesics/sec]\n", 100.*(real)l2/((real)(IMG_WIDTH)*(IMG_HEIGHT)),(real)l2 /((real)msec/1000.));
+                printf("Done: %.02g %%, speed: %.02g [geodesics/sec]\n", 100.*(real)l2/((real)(IMG_WIDTH)*(IMG_HEIGHT)),(real)l2 /((real)msec/1000.));
                 for(int k  = l1; k < l2; k++) { // For all pixel rows (distributed over threads)...
                         for(int fr=0; fr<num_indices; fr++) {
 #if (LOG_IMPACT_CAM)
                                 int y=(int)(k/IMG_WIDTH);
                                 int x=(int)(k%IMG_WIDTH);
-
                                 real r_i = exp(log(20.)*(real)(x+0.5) /(real) IMG_WIDTH) - 1.;
                                 real theta_i = 2.*M_PI  * (real)(y+0.5)/ (real)IMG_HEIGHT;
                                 real alpha = r_i * cos(theta_i);
@@ -126,6 +126,7 @@ void calculate_image( real ** intensityfield, real energy_spectrum[num_indices],
                                 real d_theta = R_GRAV*2.* M_PI / (real)IMG_HEIGHT;
 
                                 intensityfield[k][fr]=intensityfield2[k-l1][fr] * pow(frequencies[fr], 3.)* r_i* d_r * d_theta/(source_dist*source_dist); // * e2_c;
+                                intensityfield2[k-l1][fr]=0;
 #elif (LINEAR_IMPACT_CAM)
                                 intensityfield[k][fr]=intensityfield2[k-l1][fr] * pow(frequencies[fr], 3.); //* e2_c;
 #endif

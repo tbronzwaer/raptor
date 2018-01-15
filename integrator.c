@@ -186,12 +186,13 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
         alpha = -CAM_SIZE_X * 0.5 + (x + 0.5) * stepx;
         beta  = -CAM_SIZE_Y * 0.5 + (y + 0.5) * stepy;
 #elif (LOG_IMPACT_CAM)
-        real stepx = CAM_SIZE_X / (real) IMG_WIDTH;
-        real stepy = CAM_SIZE_Y / (real) IMG_HEIGHT;
+        real stepx = (real)CAM_SIZE_X / (real) IMG_WIDTH;
+        real stepy = (real)CAM_SIZE_Y / (real) IMG_HEIGHT;
         real r_i = exp(log(20.)*(real)(x+0.5)/((real)IMG_WIDTH)) - 1.;
         real theta_i = 2.0*M_PI  * (real)(y+0.5)/((real)IMG_HEIGHT);
-        alpha = r_i * cosf(theta_i);
-        beta  = r_i * sinf(theta_i);
+
+        alpha = r_i * cos(theta_i);
+        beta  = r_i * sin(theta_i);
 #endif
         initialize_photon(alpha, beta, photon_u, t_init);
 
