@@ -1,5 +1,6 @@
 #include "parameters.h"
 #include "functions.h"
+
 void read_model( char *argv[]){
         char inputfile[100];
         char inputfile2[100];
@@ -68,7 +69,8 @@ void read_model( char *argv[]){
         fclose (input);
         printf("Done!\n");
 
-        srand(1337);
+        initrcarry(982451653);
+        srand(982451653);
 }
 
 void calculate_image( real ** intensityfield, real energy_spectrum[num_indices],real frequencies[num_indices]){
