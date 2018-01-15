@@ -278,11 +278,6 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
                 if(X_u[1] < stopx[1] && X_u[1] > startx[1] && X_u[2] > startx[2] && X_u[2] < stopx[2])
                         radiative_transfer(X_u,k_u,lightpath[8], frequencies,icur,intensityfield2,tau,p);
 #endif
-#if (BACKGROUDN_PNG)
-                if(r_current > cutoff_outer ) {
-                        color_sphere_outer(X_u, icur,intensityfield2,tau[0]);
-                }
-#endif
 
                 lambda += fabs(dlambda_adaptive);
                 r_current = logscale ? exp(photon_u[1]) : photon_u[1];

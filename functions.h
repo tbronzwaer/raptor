@@ -110,29 +110,7 @@ void connection_udd(const real X_u[4], real gamma_udd[4][4][4]);
 // This function initializes a single 'superphoton' or light ray.
 #pragma acc routine (initialize_photon)
 void initialize_photon(real alpha, real beta, real photon_u[8], real t_init);
-#pragma acc routine (initialize_photon_tetrads)
-int initialize_photon_tetrads(int x, int y, real *photon_u, real t,real Xcam[4], real Ucam[4]);
 
-void camera_trajectory(real t);
-
-// PLASMA.C
-///////////
-
-// Return the plasma parameters: electron density, dimensionless temperature,
-// magnetic field strength, contravariant plasma four-velocity
-void get_plasma_parameters(real X_u[4], real *n_e, real *THETA_e_,
-                           real *B, real Uplasma_u[4]);
-
-// Return electron density at position X_u
-real electron_density(real X_u[4], real u_u[4]);
-
-void hotspot_velocity(real *X_u, real *Uplasma_u);
-
-// Return the value (or VECTOR?!) for B at position X_u
-real B_fun(real X_u[4],real ne);
-
-// Return the value for Te at position X_u
-real THETA_e(real X_u[4]);
 
 // RADIATIVE_TRANSFER.C
 ///////////////////////
@@ -142,14 +120,6 @@ void init_memory_kappa();//real ****j_nu_data,real ****alpha_nu_data);
 real interpolate_scalar_4d(real ****A, real nuratio, real kappa, real Thetae, real theta);
 real interpolate_scalar_2d(real **var, real nuratio, real Thetae);
 
-//TErun emission coeffiencient j_nu for free-free emission
-real jnu_brem_ee(real nu, real ne, real Thetae);
-
-/*calculates e-e spectrum using tables and interpolations*/
-real Gfun(real x,real Thetae);
-
-/*Approximation from Maxon 1972*/
-real Ei(real xx);
 real absorption_coeff_kappa(real **** alpha_nu_data,real nu,real Ne, real Thetae, real B,real beta, real theta);
 real emission_coeff_kappa(real **** j_nu_data,real nu,real Ne, real Thetae, real B,real beta, real theta);
 
@@ -230,14 +200,6 @@ real color(real X_u[NDIM]);
 
 #pragma acc routine (color_outer)
 real color_outer(real X_u[NDIM]);
-
-
-// BACKGROUND FUNCTIONS
-
-void read_png_file(char* file_name);
-void abort_(const char * s, ...);
-void process_png_file();
-real get_BG_color(int xPixel, int yPixel);
 
 // RCARRY FUNCTIONS
 real genrandrcarry();

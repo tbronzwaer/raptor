@@ -48,9 +48,6 @@ typedef double real;
 #define IMGFILE (1)
 #define SPECFILE (1)
 
-#define BACKGROUND_PNG (0)
-#define BACKGROUND_COLOR (0)
-
 #define RAD_TRANS (1)
 
 //GEOD FILE, print geodesics

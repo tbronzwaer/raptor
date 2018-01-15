@@ -52,17 +52,6 @@ int main(int argc, char *argv[]){
         ///////////////////
         read_model(argv);
 
-        // LOAD BACKGROUND IMAGE
-        ////////////////////////
-#if (BACKGROUND_PNG)
-        read_png_file("VR_BG_2.png");
-#endif
-
-        // read in camera position and velocity
-#if (VRCAM)
-        camera_trajectory(TIME_INIT);
-
-#endif
         // Initialize HARM2D grmhd model
         // Note: this sets the black hole spin 'a'
         init_model();
