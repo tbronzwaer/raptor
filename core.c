@@ -7,7 +7,6 @@ void read_model( char *argv[]){
 
         // model to read
         sscanf(argv[1], "%s", inputfile);
-        //    sprintf(inputfile, "/data/HARM2D/dump%.05d",argv[3]);
         printf("Reading %s...",inputfile);
         FILE *input;
         input = fopen(inputfile, "r");
@@ -18,7 +17,6 @@ void read_model( char *argv[]){
 
         char temp[100], temp2[100];
 
-        // read_in_table("symphony_test.txt");//,j_nu_data,alpha_nu_data);
 
         // Model parameters
         fscanf(input, "%s %s %lf", temp, temp2, &MBH);
@@ -38,13 +36,13 @@ void read_model( char *argv[]){
         // INPUT AND OUTPUT FILES
         sscanf(argv[2], "%s", GRMHD_FILE);
         sscanf(argv[3], "%s", OUTPUT_FILE);
-        // MODEL PARAMETERS FOR THEMIS
+
         sscanf(argv[4], "%lf", &M_UNIT);
         sscanf(argv[5], "%lf", &INCLINATION);
         sscanf(argv[6], "%lf", &R_HIGH);
         sscanf(argv[7], "%lf", &R_LOW);
-        //sscanf(argv[8], "%lf", &TIME_INIT);
-        TIME_INIT=0;
+        sscanf(argv[8], "%lf", &TIME_INIT);
+
         fprintf(stderr,"Model parameters:\n");
         fprintf(stderr,"MBH \t\t= %g \n", MBH);
         fprintf(stderr,"M_UNIT \t\t= %g \n", M_UNIT);

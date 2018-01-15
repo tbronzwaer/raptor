@@ -45,25 +45,30 @@
 
 int main(int argc, char *argv[]){
         fprintf(stderr, "BOOTING UP RAPTOR\n");
-        // INPUT FILE
-        /////////////
+
         clock_t start = clock();
 
         // INITIALIZE MODEL
         ///////////////////
+
         read_model(argv);
 
-        // Initialize HARM2D grmhd model
-        // Note: this sets the black hole spin 'a'
+        // INITIALIZE GRMHD MODEL
+        /////////////////////////
+
         init_model();
 
         // Set constants such as R_ISCO, JANSKY_FACTOR
-        // These depend on the black hole spin
+        //////////////////////////////////////////////
+
         set_constants(TIME_INIT);
+
         fprintf(stderr,"\nDone with initialization\n");
         print_time(start);
+
         // INITIALIZE DATA STRUCTURES
         /////////////////////////////
+
         real energy_spectrum[num_indices];
         real frequencies[num_indices];
         real **intensityfield;
@@ -83,17 +88,23 @@ int main(int argc, char *argv[]){
         // MAIN PROGRAM LOOP
         ////////////////////
 
-        //CALCULATE IMAGE
+        // CALCULATE IMAGE
+        //////////////////
+
         calculate_image(intensityfield,energy_spectrum, frequencies);
+
         fprintf(stderr,"\nDone with ray tracing\n");
         print_time(start);
+
         // WRITE OUTPUT FILES
         /////////////////////
 
         output_files(intensityfield,energy_spectrum,frequencies);
+
         fprintf(stderr,"\nDone with output\n");
         print_time(start);
-        free(intensityfield);
+
+        free(intensityfield); free(p);
 
         // END OF PROGRAM
         /////////////////
