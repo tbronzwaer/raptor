@@ -170,27 +170,30 @@ int get_fluid_params(real X[NDIM], real *Ne,
         real Ucov[NDIM], Bcov[NDIM];
 
         metric_uu(X, gcon);
-        metric_dd(X, gcov); // Gammies metric
+        metric_dd(X, gcov);
 
         *IN_VOLUME = 1;
 
         real smalll = 1.e-20;
-        // conversie van coordinaat naar cel i,j
+
+        //convert position to index
         Xtoij(X, &i, &j, del);
-        k=0;
-        //coef nodig voor je interpolatie
+        k=0; //2D DATA
+
+        //interpolation coefficients
         coeff[0] = (1. - del[1]) * (1. - del[2]);
         coeff[1] = (1. - del[1]) * del[2];
         coeff[2] = del[1] * (1. - del[2]);
         coeff[3] = del[1] * del[2];
-        //inteprolatie van je primitieve variabelen
+
+        //inteprolate density and internal energy
         rho = interp_scalar(p[KRHO], i, j,k, coeff);
         uu = interp_scalar(p[UU], i, j,k, coeff);
 
-        //bepalen van de plasma number density en electron temperatuur
+        //Number density
         *Ne = rho * Ne_unit;
-        *Thetae = (uu ) / (rho ) * Thetae_unit;
 
+        //interpolate primitive B and V
         Bp[1] = interp_scalar(p[B1], i, j,k, coeff);
         Bp[2] = interp_scalar(p[B2], i, j,k, coeff);
         Bp[3] = interp_scalar(p[B3], i, j,k, coeff);
@@ -199,9 +202,7 @@ int get_fluid_params(real X[NDIM], real *Ne,
         Vcon[2] = interp_scalar(p[U2], i, j,k, coeff);
         Vcon[3] = interp_scalar(p[U3], i, j,k, coeff);
 
-        //reconstrueren van de 4 vectoren
-        // Get Ucov
-
+        //Reconstruction of the four-velocity
         VdotV = 0.;
         for (i = 1; i < NDIM; i++)
                 for (j = 1; j < NDIM; j++)
@@ -211,7 +212,8 @@ int get_fluid_params(real X[NDIM], real *Ne,
         for (i = 1; i < NDIM; i++)
                 Ucon[i] = Vcon[i] - Vfac * gcon[0][i];
 
-        lower(Ucon, gcov, Ucov); // Gammie's lowering function
+
+        lower_index(X, gcov, Ucon, Ucov);
 
         // Get B and Bcov
         UdotBp = 0.;
@@ -220,24 +222,20 @@ int get_fluid_params(real X[NDIM], real *Ne,
         Bcon[0] = UdotBp;
         for (i = 1; i < NDIM; i++)
                 Bcon[i] = (Bp[i] + Ucon[i] * UdotBp) / Ucon[0];
+        lower_index(X, gcov, Bcon, Bcov);
 
-        //  lower_index(X, Bcon, Bcov);
-        lower(Bcon, gcov, Bcov); // Gammie's lowering function
-
-        //sterkte van het magneetveld
+        //caclulate magnetic field strength
         *B =sqrt(Bcon[0] * Bcov[0] + Bcon[1] * Bcov[1] +
                  Bcon[2] * Bcov[2] + Bcon[3] * Bcov[3]) * B_unit + smalll;
         real Bsq = (Bcon[0] * Bcov[0] + Bcon[1] * Bcov[1] +
                     Bcon[2] * Bcov[2] + Bcon[3] * Bcov[3]);
 
-
+        // plasma beta model for temperature
         real beta_trans=1.;
         *beta = uu*(4./3.-1.) / (0.5 *(Bsq + smalll) *beta_trans);
         real b2=pow(uu*(4./3.-1.) / (0.5 *(Bsq + smalll) *beta_trans),2);
 
-        real Rhigh=1.;
-        real Rlow=1.;
-        real trat = 1.; //Rhigh * b2/(1. + b2) + Rlow /(1. + b2);
+        real trat = R_HIGH * b2/(1. + b2) + R_LOW /(1. + b2);
 
         real two_temp_gam = 0.5 * ((1. + 2. / 3. * (trat + 1.) / (trat +2.)) + 4./3.);
 
@@ -248,18 +246,12 @@ int get_fluid_params(real X[NDIM], real *Ne,
         if(*Thetae < 0 ) {
                 *Thetae=smalll;
         }
+
+//some plasma quantaties that could be usefull, lorentz factor, beta (velocity), bernoulli factor
         real lor = 1./sqrt(-gcon[0][0])*Ucon[0];
         real betaf= sqrt(lor*lor-1.)/lor;
-
-        //calculate bernoulli parmater, if Bern > 1. plasma is unbounded ; heath it up.
         real gam = 4./3.;
         *Bern = -(1.+ uu/rho*gam)*Ucov[0];
-
-        real x0=log(50.);
-        real s=2.;
-        real h2=0.35;
-
-        real th = X[2];
 
 // Cant trust high magnetized regions.
         if(Bsq/rho>1.0) {
@@ -308,7 +300,6 @@ int get_fluid_params(real X[NDIM], real *Ne,
 
 void set_units(real M_unit_)
 {
-
         /** from this, calculate units of length, time, mass,
            and derivative units **/
         L_unit = GGRAV * MBH / (SPEED_OF_LIGHT * SPEED_OF_LIGHT);
@@ -324,7 +315,6 @@ void set_units(real M_unit_)
         fprintf(stderr, "rho,u,B: %g %g %g\n", RHO_unit, U_unit, B_unit);
 
         Ne_unit = RHO_unit / (PROTON_MASS + ELECTRON_MASS);
-
 }
 
 inline real interp_scalar(real ***var, int i, int j,int k, real coeff[4])
@@ -367,28 +357,6 @@ inline void Xtoij(real X[NDIM], int *i, int *j, real del[NDIM])
         return;
 }
 
-void lower(real *ucon, real Gcov[NDIM][NDIM], real *ucov)
-{
-
-        ucov[0] = Gcov[0][0] * ucon[0]
-                  + Gcov[0][1] * ucon[1]
-                  + Gcov[0][2] * ucon[2]
-                  + Gcov[0][3] * ucon[3];
-        ucov[1] = Gcov[1][0] * ucon[0]
-                  + Gcov[1][1] * ucon[1]
-                  + Gcov[1][2] * ucon[2]
-                  + Gcov[1][3] * ucon[3];
-        ucov[2] = Gcov[2][0] * ucon[0]
-                  + Gcov[2][1] * ucon[1]
-                  + Gcov[2][2] * ucon[2]
-                  + Gcov[2][3] * ucon[3];
-        ucov[3] = Gcov[3][0] * ucon[0]
-                  + Gcov[3][1] * ucon[1]
-                  + Gcov[3][2] * ucon[2]
-                  + Gcov[3][3] * ucon[3];
-
-        return;
-}
 
 // ALLOCATION STUFF BELOW HERE
 //////////////////////////////

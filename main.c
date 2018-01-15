@@ -44,6 +44,7 @@
 #include "parameters.h"
 
 int main(int argc, char *argv[]){
+        fprintf(stderr, "BOOTING UP RAPTOR");
         // INPUT FILE
         /////////////
         clock_t start = clock();

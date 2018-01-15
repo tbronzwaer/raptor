@@ -11,7 +11,7 @@
 void print_time(int start){
         clock_t diff = clock() - start;
         int msec = diff * 1000 / (CLOCKS_PER_SEC*20);
-        printf("Time taken %d seconds %d milliseconds\n", msec/1000, msec%1000);
+        printf("Total time taken %d seconds %d milliseconds\n", msec/1000, msec%1000);
 }
 
 
