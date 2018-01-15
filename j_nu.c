@@ -12,21 +12,7 @@
 #include "gsl/gsl_sf_hyperg.h"
 #include <gsl/gsl_sf_bessel.h>
 
-//kappa distribution function
-
-#define ME  (9.10956e-28)
-#define mc2 (8.18726e-07)
-#define kb  (1.38e-16)
-#define hpl (6.6262e-27)
-#define CL  (2.99792458e10)
-#define keV (1.602e-9)
-#define alphaf  (7.29735e-3)
-#define h__mc2  (8.09e-21)
-#define SIGMATH (0.665245873e-24)
-
 #define e2_ch (1.161410e-03)
-
-
 
 //non thermal emission
 real emission_coeff_kappa_FIT(real nu,real Ne, real Thetae, real B,real beta, real theta){

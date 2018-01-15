@@ -5,8 +5,6 @@
 // TRANSFORMATION FUNCTIONS
 ///////////////////////////
 
-// WARNING: these are not yet listed in functions.h and are only meant for use
-// by other functions in this file.
 
 // Returns the value of f(Xg2) given some value for Xr2. For the correct Xg2,
 // we have f(Xg2) = 0.

@@ -180,7 +180,6 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
                 photon_u[i]=0;
 
         // Create initial ray conditions
-
 #if (LINEAR_IMPACT_CAM)
         real stepx = CAM_SIZE_X / (real) IMG_WIDTH;
         real stepy = CAM_SIZE_Y / (real) IMG_HEIGHT;
@@ -215,17 +214,12 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
         // Trace light ray until it reaches the event horizon or the outer
         // cutoff, or steps > max_steps
 
-#if (metric == CAR)
-        while(X_u[1]< stopx[1] && X_u[2]< stopx[2] && X_u[3]<stopx[3] && X_u[1] > startx[1] && X_u[2] > startx[2] && X_u[3]> startx[3] && steps < max_steps && !TERMINATE) {
 
-#elif ( metric == BL || metric == MBL || metric == DM)
-
+#if ( metric == BL || metric == MBL)
         // Stop condition for BL coords
         while (r_current > cutoff_inner && r_current < cutoff_outer &&
                steps < max_steps && !TERMINATE) { // && photon_u[0] < t_final){
-
 #elif (metric == KS || metric == MKS)
-
         // Stop condition for KS coords
         while ( r_current < cutoff_outer && r_current > cutoff_inner &&
                 steps < max_steps && !TERMINATE) { // 2.26 for Neuton star 3 solar masses
