@@ -181,25 +181,9 @@ void write_image(FILE *imgfile, real **intensityfield,int f, real scalefactor);
 // Write the arrays "intensityfield" (scaled by "scalefactor") and "lambdafield" to a VTK file
 void write_VTK_image(FILE *imgfile, real *intensityfield, real *lambdafield, real scalefactor);
 
- void print_time(int start);
+// prints time with respect to a start time
+void print_time(int start);
 
-
-// VR checker bord sphere functions
-
-#pragma acc routine (color_sphere_outer)
-real color_sphere_outer(real X_u[NDIM],int icur,real intensity[maxsize][num_indices],real tau);
-
-#pragma acc routine (color_sphere)
-real color_sphere(real X_u[NDIM],int icur,real intensity[maxsize][num_indices]);
-
-#pragma acc routine (intersect)
-int intersect(real X_u[NDIM]);
-
-#pragma acc routine (color)
-real color(real X_u[NDIM]);
-
-#pragma acc routine (color_outer)
-real color_outer(real X_u[NDIM]);
 
 // RCARRY FUNCTIONS
 real genrandrcarry();
