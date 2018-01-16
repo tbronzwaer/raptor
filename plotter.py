@@ -8,16 +8,26 @@ from scipy.interpolate import interp2d
 
 '''READING THE DATA'''
 
-img_size  = 100
-img_size2 = 100
+
 # 2D array to contain image
 
 for i in range (0,1):
-	print i
 	flux = 0.
 	Nimg= i #*25 + 1000
-	data=np.loadtxt('output/img_data_0_2.300000e+11_60.00.dat')+1e-20
-	print np.size(data)
+	#header=np.loadtxt('output/img_data_0_2.300000e+11_60.00.dat',userows=1)
+
+	f = open('output/img_data_0_2.300000e+11_60.00.dat')
+	line = f.readline()
+	header = line.split()
+
+	print "Flux of", float(header[2]), "at frequency ", float(header[3])
+	print "Munit of ", header[4], "viewing angle of ", header[5], "Rlow ", header[6], "Rhigh", header[7]
+
+	img_size=int(header[0])
+	img_size2=int(header[1])
+
+	data=np.loadtxt('output/img_data_0_2.300000e+11_60.00.dat',skiprows=1)+1e-20
+
 	if(img_size!=img_size2):
 		xi = np.linspace(0,img_size,img_size2)
 		yi = np.linspace(0,img_size,img_size2)
@@ -30,10 +40,10 @@ for i in range (0,1):
 		img = griddata((x,y),data,(xi,yi),method='cubic',rescale=True)
 	else:
 		img=data
+		
 	img = np.reshape(img,(-1,img_size2))
 	img = np.transpose(img)
 	img = np.flipud(img)
-	print np.max(img)
 
 	'''PLOT RESULTS'''
 # Clear the plot
