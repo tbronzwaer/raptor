@@ -14,21 +14,16 @@
 #include "functions.h"
 #include "parameters.h"
 
-void init_model()
-{
-        /* find dimensional quantities from black hole
-           mass and its accretion rate */
+void init_model(){
+        // Set physical units
         set_units(M_UNIT);
 
-        fprintf(stderr, "\nHARM2D SIMULATION DATA\n");
-        fprintf(stderr, "Reading simulation data...\n");
-
+        // Initialize the HARM GRMHD data
         init_harm_data(GRMHD_FILE);
+        fprintf(stderr, "\nREADING HARM2D SIMULATION DATA\n");
 }
 
-
-void init_harm_data(char *fname)
-{
+void init_harm_data(char *fname){
         FILE *fp;
         real x[4];
 
@@ -81,12 +76,11 @@ void init_harm_data(char *fname)
                 exit;
         }
 
-
         // nominal non-zero values for axisymmetric simulations
         startx[0] = 0.;
-        startx[2]=startx[2]; // *M_PI;
+        startx[2]=startx[2];
         startx[3] = 0.;
-        dx[2]=dx[2]; // *M_PI;
+        dx[2]=dx[2];
         stopx[0] = 1.;
         stopx[1] = startx[1] + N1 * dx[1];
         stopx[2] = startx[2] + N2 * dx[2];
@@ -98,18 +92,17 @@ void init_harm_data(char *fname)
         dx[0] = 1.;
         dx[3] = 2. * M_PI;
 
-        // Allocate storage for all model size dependent variables
-        fprintf(stderr,"memory alloc...");
+        // Allocate storage for all model size dependent variables.
+        fprintf(stderr,"Allocating memory...");
         init_storage();
         fprintf(stderr,"done\n");
-
 
         Thetae_unit = (gam - 1.) * (PROTON_MASS / ELECTRON_MASS) / (1. + TP_OVER_TE);
 
         dMact = 0.;
         Ladv = 0.;
 
-        for (k = 0; k < N1 * N2; k++) {
+        for (k = 0; k < N1 * N2; k++){
                 j = k % N2;
                 i = (k - j) / N2;
                 fscanf(fp, "%lf %lf %lf %lf", &x[1], &x[2], &r, &h);
@@ -121,22 +114,16 @@ void init_harm_data(char *fname)
                        &p[U2][i][j][0],
                        &p[U3][i][j][0],
                        &p[B1][i][j][0], &p[B2][i][j][0], &p[B3][i][j][0]);
-                //#if (metric==MKS )d
-                fscanf(fp, "%lf", &divb);
 
-                fscanf(fp, "%lf %lf %lf %lf",
-                       &Ucon[0], &Ucon[1], &Ucon[2], &Ucon[3]);
-                fscanf(fp, "%lf %lf %lf %lf", &Ucov[0],
-                       &Ucov[1], &Ucov[2], &Ucov[3]);
-                fscanf(fp, "%lf %lf %lf %lf", &Bcon[0],
-                       &Bcon[1], &Bcon[2], &Bcon[3]);
-                fscanf(fp, "%lf %lf %lf %lf", &Bcov[0],
-                       &Bcov[1], &Bcov[2], &Bcov[3]);
+                fscanf(fp, "%lf", &divb);
+                fscanf(fp, "%lf %lf %lf %lf", &Ucon[0], &Ucon[1], &Ucon[2], &Ucon[3]);
+                fscanf(fp, "%lf %lf %lf %lf", &Ucov[0], &Ucov[1], &Ucov[2], &Ucov[3]);
+                fscanf(fp, "%lf %lf %lf %lf", &Bcon[0], &Bcon[1], &Bcon[2], &Bcon[3]);
+                fscanf(fp, "%lf %lf %lf %lf", &Bcov[0], &Bcov[1], &Bcov[2], &Bcov[3]);
                 fscanf(fp, "%lf ", &vmin);
                 fscanf(fp, "%lf ", &vmax);
                 fscanf(fp, "%lf ", &vmin);
                 fscanf(fp, "%lf ", &vmax);
-                //#endif
                 fscanf(fp, "%lf\n", &gdet);
 
                 // Check accretion rate
@@ -153,15 +140,15 @@ void init_harm_data(char *fname)
         fprintf(stderr, "dMact: %g Macc: %e [Msun/year], Ladv: %g\n", dMact, dMact * M_UNIT / T_unit / (MSUN / YEAR),Ladv); //0.05279
         fprintf(stderr, "Done reading data\n\n");
 
-#pragma acc copyin(Ne_unit,B_unit,U_unit,Thetae_unit,RHO_unit,R0,Rin,Rh,Rout,Rms,hslope,dMact,Ladv)
-
+        // Parallelization pragma statement
+        #pragma acc copyin(Ne_unit,B_unit,U_unit,Thetae_unit,RHO_unit,R0,Rin,Rh,Rout,Rms,hslope,dMact,Ladv)
 }
 
-// Get the flud parameters - IN THE PLASMA FRAME?
+// Get the flud parameters in the local co-moving plasma frame.
 int get_fluid_params(real X[NDIM], real *Ne,
-                     real *Thetae, real *B, real *beta, real * Bern, real Bcon[NDIM], real Ucon[NDIM], int *IN_VOLUME,real **** p,real gcov[NDIM][NDIM],real gcon[NDIM][NDIM])
-{
-
+                     real *Thetae, real *B, real *beta, real * Bern,
+                     real Bcon[NDIM], real Ucon[NDIM], int *IN_VOLUME, real **** p,
+                     real gcov[NDIM][NDIM],real gcon[NDIM][NDIM]){
         int i, j,k;
         real del[NDIM];
         real rho, uu;
@@ -246,13 +233,13 @@ int get_fluid_params(real X[NDIM], real *Ne,
                 *Thetae=smalll;
         }
 
-//some plasma quantaties that could be usefull, lorentz factor, beta (velocity), bernoulli factor
+        //some plasma quantaties that could be usefull, lorentz factor, beta (velocity), bernoulli factor
         real lor = 1./sqrt(-gcon[0][0])*Ucon[0];
         real betaf= sqrt(lor*lor-1.)/lor;
         real gam = 4./3.;
         *Bern = -(1.+ uu/rho*gam)*Ucov[0];
 
-// Cant trust high magnetized regions.
+        // Cant trust high magnetized regions.
         if(Bsq/rho>1.0) {
                 *Ne=smalll;
                 *Thetae = smalll;
@@ -260,7 +247,7 @@ int get_fluid_params(real X[NDIM], real *Ne,
                 return 0;
         }
 
-
+        // Activate for debugging purposes.
         if(0) {
                 printf("\nBcon[0] = %+.15e\n", Bcon[0]);
                 printf("Bcon[1] = %+.15e\n", Bcon[1]);
@@ -288,5 +275,4 @@ int get_fluid_params(real X[NDIM], real *Ne,
         }
 
         return 1;
-
 }

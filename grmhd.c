@@ -1,4 +1,3 @@
-
 /*
  * grmhd.c
  *
@@ -15,9 +14,7 @@
 #include "functions.h"
 #include "parameters.h"
 
-
-void set_units(real M_unit_)
-{
+void set_units(real M_unit_){
         /** from this, calculate units of length, time, mass,
            and derivative units **/
         L_unit = GGRAV * MBH / (SPEED_OF_LIGHT * SPEED_OF_LIGHT);
@@ -35,8 +32,7 @@ void set_units(real M_unit_)
         Ne_unit = RHO_unit / (PROTON_MASS + ELECTRON_MASS);
 }
 
-real interp_scalar_2D(real ***var, int i, int j,int k, real coeff[4])
-{
+real interp_scalar_2D(real ***var, int i, int j,int k, real coeff[4]){
         real interp;
 
         interp =
@@ -47,8 +43,7 @@ real interp_scalar_2D(real ***var, int i, int j,int k, real coeff[4])
         return interp;
 }
 
-void Xtoij(real X[NDIM], int *i, int *j, real del[NDIM])
-{
+void Xtoij(real X[NDIM], int *i, int *j, real del[NDIM]){
         *i = (int) ((X[1] - startx[1]) / dx[1] - 0.5 );
         *j = (int) ((X[2] - startx[2]) / dx[2] - 0.5 );
 
@@ -75,12 +70,10 @@ void Xtoij(real X[NDIM], int *i, int *j, real del[NDIM])
         return;
 }
 
+// ALLOCATION CODE BELOW HERE
+/////////////////////////////
 
-// ALLOCATION STUFF BELOW HERE
-//////////////////////////////
-
-void init_storage()
-{
+void init_storage(){
         int i;
 
         p = (real****)malloc(NPRIM*sizeof(real***)); //malloc_rank1(NPRIM, sizeof(real *));
