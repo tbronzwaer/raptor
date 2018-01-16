@@ -115,7 +115,7 @@ real radiative_transfer(real *X_u, real *k_u,real dl_current, real *frequency,in
 
                                 // Obtain emission coefficient in current plasma conditions
                                 emission_coeff(B,pitch_ang, THETA_e, nu_p, n_e,&j_nu,&a_nu);
-
+                                dl_current_f = dl_current *  Rg / ( frequency[f]);
                                 real dtau  = (nu_p * a_nu * dl_current_f);
                                 tau[f] += dtau;
                                 real dI =  (j_nu/nu_p2) * exp(-tau[f]) * dl_current_f; //j_nu*exp(-tau[f]);
@@ -123,7 +123,6 @@ real radiative_transfer(real *X_u, real *k_u,real dl_current, real *frequency,in
                                 if( tau[f] < log(1000.) && !(tau[f]<0.0)) {
                                         Icurrent+= dI;
                                 }
-
                                 intensity[icur][f]=Icurrent;
                         }
                 }

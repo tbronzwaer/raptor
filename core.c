@@ -74,31 +74,33 @@ void read_model( char *argv[]){
 
 void calculate_image( real ** intensityfield, real energy_spectrum[num_indices],real frequencies[num_indices]){
 
+        static real intensityfield2[maxsize][num_indices];
+
         int lmax = (int)((real)IMG_HEIGHT*IMG_WIDTH/(real)maxsize + 0.5);
         if(lmax==0)
                 lmax=1.;
-        static real intensityfield2[maxsize][num_indices];
 
         for(int i = 0; i < maxsize; i++) {
                 for(int f = 0; f < num_indices; f++) {
                         intensityfield2[i][f]=0;
                 }
         }
+
         real start=clock();
         real diff = clock() - start;
         clock_t startgpu=clock();
 
-        int i,f,msec;
+        int msec;
         int l1,l2;
         for(int l=0; l<lmax; l++) {
                 l1 =(int)l*maxsize;
                 l2 =(int)(l+1)*maxsize;
-                int i=0;
+
                 if(l2 >(IMG_WIDTH)*(IMG_HEIGHT))
                         l2 =(IMG_WIDTH)*(IMG_HEIGHT);
 
                 //#pragma acc copyin(intensityfield2[0:1000][0:(num_indices)])
-#pragma omp parallel for private(i,f) shared(energy_spectrum,frequencies,intensityfield,p) schedule(static,1)
+#pragma omp parallel for shared(energy_spectrum,frequencies,intensityfield,p) schedule(static,1)
                 //#pragma acc kernels vector_length(1) copyin(Xcam[0:4],Ucam[0:4],IMG_WIDTH,IMG_HEIGHT,intensityfield2[0:maxsize][0:num_indices],p[0:NPRIM][0:N1][0:N2][0:N3],frequencies[0:num_indices],l1,l2) copyout(intensityfield2[0:maxsize][0:(num_indices)])
                 for(int i=l1; i < l2; i++) { // For all pixel rows (distributed over threads)...
                         int y=(int)(i/IMG_WIDTH);
@@ -112,6 +114,8 @@ void calculate_image( real ** intensityfield, real energy_spectrum[num_indices],
                 diff=clock()-startgpu;
                 int msec = diff *1000/ (CLOCKS_PER_SEC*20);
                 printf("Done: %.02g %%, speed: %.02g [geodesics/sec]\n", 100.*(real)l2/((real)(IMG_WIDTH)*(IMG_HEIGHT)),(real)l2 /((real)msec/1000.));
+
+#pragma omp parallel for shared(energy_spectrum,frequencies,intensityfield,p) schedule(static,1)
                 for(int k  = l1; k < l2; k++) { // For all pixel rows (distributed over threads)...
                         for(int fr=0; fr<num_indices; fr++) {
 #if (LOG_IMPACT_CAM)
@@ -134,8 +138,8 @@ void calculate_image( real ** intensityfield, real energy_spectrum[num_indices],
         }
         free(p);
 #pragma acc wait
-        for(int i=0; i<IMG_WIDTH*IMG_HEIGHT; i++) {
 
+        for(int i=0; i<IMG_WIDTH*IMG_HEIGHT; i++) {
                 for(int f=0; f<num_indices; f++) {
                         energy_spectrum[f]+=intensityfield[i][f];
                 }

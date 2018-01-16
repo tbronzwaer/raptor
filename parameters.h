@@ -44,8 +44,8 @@ typedef double real;
 // OUTPUT SWITCHES
 ////////////////////
 
-#define VTKFILE (1)
-#define IMGFILE (0)
+#define VTKFILE (0)
+#define IMGFILE (1)
 #define SPECFILE (1)
 
 #define RAD_TRANS (1)
