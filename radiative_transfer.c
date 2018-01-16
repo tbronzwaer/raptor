@@ -13,16 +13,6 @@
 #include "gsl/gsl_sf_hyperg.h"
 #include "raptor_harm_model.h"
 
-#define ME  (9.10956e-28)
-#define mc2 (8.18726e-07)
-#define kb  (1.38e-16)
-#define hpl (6.6262e-27)
-#define CL  (2.99792458e10)
-#define keV (1.602e-9)
-#define alphaf  (7.29735e-3)
-#define h__mc2  (8.09e-21)
-#define SIGMATH (0.665245873e-24)
-
 // Compute the photon frequency in the plasma frame:
 real freq_in_plasma_frame(real Uplasma_u[4], real k_d[4]){
         real nu_plasmaframe = 0.;
@@ -34,28 +24,8 @@ real freq_in_plasma_frame(real Uplasma_u[4], real k_d[4]){
         if(nu_plasmaframe<=0.0) {
                 nu_plasmaframe = 1.0;
         }
-        //    if(nu_plasmaframe<0){
 
-        //    nu_plasmaframe = 1e-5;
-        //  }
         return nu_plasmaframe;
-}
-
-#pragma acc routine(acos_imp)
-float acos_imp(float x) {
-        float negate = 1; //x / fabs(x);
-        x = abs(x);
-        float ret = -0.0187293;
-        ret = ret * x;
-        ret = ret + 0.0742610;
-        ret = ret * x;
-        ret = ret - 0.2121144;
-        ret = ret * x;
-        ret = ret + 1.5707288;
-        ret = ret * sqrt(1.0-x);
-        ret = ret - 2 * negate * ret;
-
-        return negate*3.14159265358979 + ret;
 }
 
 // See eqn 73 in Dexter 2016
