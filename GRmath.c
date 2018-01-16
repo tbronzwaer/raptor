@@ -209,7 +209,7 @@ void KS_to_BL_u(real *KSphoton_u, real *BLphoton_u){
 
         // Do the transformation
         real U_u_dummy[4], X_u_dummy[4];
-        LOOP_i {
+        LOOP_i{
                 U_u_dummy[i] = U_u[i];
                 X_u_dummy[i] = X_u[i];
                 U_u[i] = 0.;

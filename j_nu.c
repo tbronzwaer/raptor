@@ -159,43 +159,6 @@ real emission_coeff_FFTHERMAL(real nu, real n_e, real T){
         return j_nu;
 }
 
-// Return emissivity for the simple Gaussian hot spot model discussed in Dexter 2009.
-real emissivity_hotspot(real *X_u){
-        real xspot[4];
-
-        real r  = logscale ? exp(X_u[1]) : X_u[1];
-
-        real Rspot = 0.5; // Spot size (radius)
-
-        real r_spot  = 6.0; // Spot orbit radius
-        real th_spot = 0.5 * M_PI;
-        real r32     = pow(r_spot, 1.5);
-        real omega   = 1. / (r32+a);
-        real P       = 2. * M_PI/omega; // Period of the spot on a Keplerian orbit[M]
-
-        //spot currrent position
-        xspot[0] = X_u[0]; //current coordinate time
-        xspot[1] = logscale ? log(r_spot) : r_spot;
-        xspot[2] = th_spot;                      //equator 0.5*pi
-        xspot[3] = fmod(X_u[0] / P, 1.) * 2. * M_PI + M_PI; //spot current phi at t=X[0]
-
-        // Pseudo-Cartesian coordinates
-        real xc = sqrt(r * r + a * a) * cos(X_u[3]);
-        real yc = sqrt(r * r + a * a) * sin(X_u[3]);
-        real zc = exp(X_u[1]) * cos(X_u[2]);
-
-        real xs = sqrt(r_spot * r_spot + a * a) * cos(xspot[3]);
-        real ys = sqrt(r_spot * r_spot + a * a) * sin(xspot[3]);
-        real zs = r_spot * cos(xspot[2]);
-
-        //distance^2 between photon position and spot center
-        real xx = fabs(pow(xc - xs, 2) + pow(yc - ys, 2) + pow(zc - zs, 2));
-
-        if (xx <= 4.)
-                return exp(-(xx) / 2. / Rspot / Rspot);
-        return 0.;
-}
-
 // Return emissivity for the thin disk model described in Dexter 2009
 real emissivity_thindisk(real *X_u){
         real r = logscale ? exp(X_u[1]) : X_u[1];

@@ -43,8 +43,9 @@
 #include "constants.h"
 #include "parameters.h"
 
-int main(int argc, char *argv[]){
-        fprintf(stderr, "BOOTING UP RAPTOR\n\n");
+int main(int argc, char *argv[])
+{
+        fprintf(stderr, "WELCOME TO RAPTOR 1.0\n\n");
 
         clock_t start = clock();
 
@@ -63,7 +64,7 @@ int main(int argc, char *argv[]){
 
         set_constants(TIME_INIT);
 
-        fprintf(stderr,"\nDone with initialization\n");
+        fprintf(stderr,"\nFinished initialization.\n");
         print_time(start);
 
         // INITIALIZE DATA STRUCTURES
@@ -74,26 +75,27 @@ int main(int argc, char *argv[]){
         real **intensityfield;
         intensityfield = (real**)malloc(((IMG_WIDTH) *(IMG_HEIGHT))*sizeof(real*));
 
-        for(int f = 0; f < num_indices; f++) { // For all frequencies...
+        // Frequencies, spectrum
+        for(int f = 0; f < num_indices; f++)
+        { // For all frequencies...
                 frequencies[f] = FREQ_MIN * pow(10., (real) f / (real) FREQS_PER_DEC);
                 energy_spectrum[f] = 0.0;
         }
-        for(int i = 0; i < IMG_HEIGHT*IMG_WIDTH; i++) {
-                intensityfield[i]=(real*)malloc(num_indices*sizeof(real));
-                for(int f = 0; f < num_indices; f++) {
-                        intensityfield[i][f]=0;
-                }
-        }
 
-        // MAIN PROGRAM LOOP
-        ////////////////////
+        // "intensityfield", which holds the image data
+        for(int i = 0; i < IMG_HEIGHT*IMG_WIDTH; i++) 
+        {
+                intensityfield[i]=(real*)malloc(num_indices*sizeof(real));
+                for(int f = 0; f < num_indices; f++)
+                        intensityfield[i][f]=0;
+        }
 
         // CALCULATE IMAGE
         //////////////////
 
         calculate_image(intensityfield,energy_spectrum, frequencies);
 
-        fprintf(stderr,"\nDone with ray tracing\n");
+        fprintf(stderr,"\nFinished ray tracing calculations.\n");
         print_time(start);
 
         // WRITE OUTPUT FILES
@@ -101,7 +103,7 @@ int main(int argc, char *argv[]){
 
         output_files(intensityfield,energy_spectrum,frequencies);
 
-        fprintf(stderr,"\nDone with output\n");
+        fprintf(stderr,"\nFinished writing output files.\n");
         print_time(start);
 
         // FREE ALLOCATED POINTERS

@@ -10,15 +10,12 @@
 // we have f(Xg2) = 0.
 #pragma acc routine (f_Xg2)
 real f_Xg2(real Xg2, real Xr2,real lr,int init){
-
         return M_PI * Xg2 + 0.5 * (1. - hslope) * sin(2. * M_PI * Xg2) - Xr2;
 }
 
 // Returns the value of f'(Xg2).
 #pragma acc routine (f_primed_Xg2)
-
 real f_primed_Xg2(real Xg2,real lr,int init){
-
         return M_PI + M_PI * (1. - hslope) * cos(2. * M_PI * Xg2);
 }
 
@@ -34,24 +31,19 @@ real NR_stepX(real Xg2_0, real Xr2,real lr,int init){
 // Returns the value of f(Ug2) given some value for Ur2. For the correct Ug2,
 // we have f(Ug2) = 0.
 #pragma acc routine (f_Ug2)
-
 real f_Ug2(real Ug2, real Ug1, real Ur2, real Xg2, real lr,int init){
-
         return M_PI * Ug2 * (1. + (1. - hslope) * cos(2. * M_PI * Xg2)) - Ur2;
 }
 
 // Returns the value of f'(Ug2).
 #pragma acc routine (f_primed_Ug2)
-
 real f_primed_Ug2(real Ug2, real Xg2, real lr,int init){
-
         return M_PI * (1. + (1. - hslope) * cos(2. * M_PI * Xg2));
 }
 
 // This function does "one Newton-Raphson step", i.e. it returns the NEW,
 // "better" estimate Ug2_1 based on the input estimate Ug2_0.
 #pragma acc routine (NR_stepU)
-
 real NR_stepU(real Ug2_0,real Ug1, real Ur2, real Xg2, real lr,int init){
         real fprime = f_primed_Ug2(Ug2_0, Xg2,lr,init);
 

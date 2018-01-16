@@ -4,13 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pylab import *
 from scipy import signal
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy.interpolate import griddata
 from scipy.interpolate import interp2d
-from cython.parallel import parallel, prange
-from distutils.core import setup
-from distutils.extension import Extension
-import cmocean
 
 '''READING THE DATA'''
 
