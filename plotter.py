@@ -8,13 +8,9 @@ from scipy.interpolate import interp2d
 
 '''READING THE DATA'''
 
-
-# 2D array to contain image
-
 for i in range (0,1):
 	flux = 0.
-	Nimg= i #*25 + 1000
-	#header=np.loadtxt('output/img_data_0_2.300000e+11_60.00.dat',userows=1)
+	Nimg= i
 
 	f = open('output/img_data_0_2.300000e+11_60.00.dat')
 	line = f.readline()
