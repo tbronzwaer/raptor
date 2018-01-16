@@ -14,8 +14,6 @@ void print_time(int start){
         printf("Total time taken %d seconds %d milliseconds\n", msec/1000, msec%1000);
 }
 
-
-
 void set_constants(real t){
         // Horizon radius for integration cutoff
         real Rh=(1. + sqrt(1. - a * a));
@@ -103,12 +101,5 @@ void write_VTK_image(FILE *fp, real **intensityfield, int f,real *lambdafield, r
                         flux += scalefactor * intensityfield[i + j * IMG_WIDTH][f];
                         fprintf(fp, "%+.15e\n", sqrt(scalefactor * intensityfield[i + j * IMG_WIDTH][f]));
                 }
-        //   fprintf(fp, "%+.15e\n", sqrt(scalefactor * intensityfield[i + j * IMG_WIDTH][f])); // to close the vtk gap
-        //   fprintf(fp, "SCALARS lambda float\n");
-        //   fprintf(fp, "LOOKUP_TABLE default\n");
-        //   for(j = 0; j < IMG_WIDTH; j++)
-        //       for(i = 0; i < IMG_WIDTH; i++){
-        //           fprintf(fp, "%+.15e\n", lambdafield[i + j * IMG_WIDTH]);
-        //       }
-        //     fprintf(stderr,"Integrated flux density = %.5e\n", flux);
+
 }
