@@ -55,7 +55,7 @@ typedef double real;
 
 // CAMERA SWITCHES
 ////////////////////
-#define maxsize 10000
+#define maxsize 1000000
 
 #define VRCAM (0)
 #define NORMCAM (0)

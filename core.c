@@ -75,7 +75,6 @@ void read_model( char *argv[]){
 void calculate_image( real ** intensityfield, real energy_spectrum[num_indices],real frequencies[num_indices]){
 
         int lmax = (int)((real)IMG_HEIGHT*IMG_WIDTH/(real)maxsize + 0.5);
-        printf("%d %d %d\n",lmax,maxsize,IMG_HEIGHT*IMG_WIDTH);
         if(lmax==0)
                 lmax=1.;
         static real intensityfield2[maxsize][num_indices];

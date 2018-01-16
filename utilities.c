@@ -79,14 +79,14 @@ void write_VTK_image(FILE *fp, real **intensityfield, int f,real *lambdafield, r
         fprintf(fp, "DATASET STRUCTURED_GRID\n");
         fprintf(fp, "DIMENSIONS %d %d %d\n", IMG_WIDTH, IMG_HEIGHT, 1);
         fprintf(fp, "POINTS %d float\n", (IMG_WIDTH) *(IMG_HEIGHT));
-        for(j = 0; j < IMG_WIDTH; j++)
-                for(i = 0; i < IMG_HEIGHT; i++) {
+        for(i = 0; i < IMG_WIDTH; j++)
+                for(j = 0; j < IMG_HEIGHT; j++) {
 #if (LINEAR_IMPACT_CAM)
                         real xx = -CAM_SIZE_X * 0.5 + (i + 0.5) * stepx;
                         real yy = -CAM_SIZE_Y * 0.5 + (j + 0.5) * stepy;
 #elif (LOG_IMPACT_CAM)
-                        real r_i = exp(log(20.)*(real)(j+0.5) /(real) IMG_WIDTH) - 1.;
-                        real theta_i = 2.*M_PI  * (real)(i+0.5)/ (real)IMG_HEIGHT;
+                        real r_i = exp(log(20.)*(real)(i+0.5) /(real) IMG_WIDTH) - 1.;
+                        real theta_i = 2.*M_PI  * (real)(j+0.5)/ (real)IMG_HEIGHT;
 
                         real xx = r_i * cos(theta_i);
                         real yy  = r_i * sin(theta_i);
