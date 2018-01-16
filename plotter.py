@@ -2,27 +2,21 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from pylab import *
 from scipy import signal
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy.interpolate import griddata
 from scipy.interpolate import interp2d
-from cython.parallel import parallel, prange
-from distutils.core import setup
-from distutils.extension import Extension
-import cmocean
 
 '''READING THE DATA'''
 
-img_size  = 128
-img_size2 = 128
+img_size  = 100
+img_size2 = 100
 # 2D array to contain image
 
 for i in range (0,1):
 	print i
 	flux = 0.
 	Nimg= i #*25 + 1000
-	data=np.loadtxt('test.dat')+1e-20
+	data=np.loadtxt('output/img_data_0_2.300000e+11_60.00.dat')+1e-20
 	print np.size(data)
 	if(img_size!=img_size2):
 		xi = np.linspace(0,img_size,img_size2)
@@ -37,8 +31,8 @@ for i in range (0,1):
 	else:
 		img=data
 	img = np.reshape(img,(-1,img_size2))
-	img = transpose(img)
-	img = flipud(img)
+	img = np.transpose(img)
+	img = np.flipud(img)
 	print np.max(img)
 
 	'''PLOT RESULTS'''
