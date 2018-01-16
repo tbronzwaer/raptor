@@ -25,7 +25,7 @@ for i in range (0,1):
 
 	img_size=int(header[0])
 	img_size2=int(header[1])
-
+	img_dpi = 10 * int(header[0])/1024.
 	data=np.loadtxt('output/img_data_0_2.300000e+11_60.00.dat',skiprows=1)+1e-20
 
 	if(img_size!=img_size2):
@@ -40,7 +40,7 @@ for i in range (0,1):
 		img = griddata((x,y),data,(xi,yi),method='cubic',rescale=True)
 	else:
 		img=data
-		
+
 	img = np.reshape(img,(-1,img_size2))
 	img = np.transpose(img)
 	img = np.flipud(img)
@@ -51,7 +51,7 @@ for i in range (0,1):
 	plt.close('all')
 	# Set plot size
 	plotsize = 127
-	fig = plt.figure(figsize=(img_size/10,img_size/(10)),dpi=10)
+	fig = plt.figure(figsize=(img_size/img_dpi,img_size/(img_dpi)),dpi=int(img_dpi))
 	halfrange = 20
 	ax = fig.add_subplot(111)
 
@@ -64,7 +64,7 @@ for i in range (0,1):
 	plt.axis('tight')
 
 #	plt.clim(1e-3,1.)
-	fig.set_size_inches(img_size2/10,img_size2/(10),forward=True)
+	fig.set_size_inches(1024,1024,forward=True)
 	fig.tight_layout()
 	plt.show()
 	#savefig('figures/img_%d.png'%Nimg, bbox_inches='tight', transparent=False,pad_inches=0,dpi=99.28)
