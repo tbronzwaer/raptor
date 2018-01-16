@@ -187,20 +187,20 @@ int get_fluid_params(real X[NDIM], real *Ne,
         coeff[3] = del[1] * del[2];
 
         //inteprolate density and internal energy
-        rho = interp_scalar(p[KRHO], i, j,k, coeff);
-        uu = interp_scalar(p[UU], i, j,k, coeff);
+        rho = interp_scalar_2D(p[KRHO], i, j,k, coeff);
+        uu = interp_scalar_2D(p[UU], i, j,k, coeff);
 
         //Number density
         *Ne = rho * Ne_unit;
 
         //interpolate primitive B and V
-        Bp[1] = interp_scalar(p[B1], i, j,k, coeff);
-        Bp[2] = interp_scalar(p[B2], i, j,k, coeff);
-        Bp[3] = interp_scalar(p[B3], i, j,k, coeff);
+        Bp[1] = interp_scalar_2D(p[B1], i, j,k, coeff);
+        Bp[2] = interp_scalar_2D(p[B2], i, j,k, coeff);
+        Bp[3] = interp_scalar_2D(p[B3], i, j,k, coeff);
 
-        Vcon[1] = interp_scalar(p[U1], i, j,k, coeff);
-        Vcon[2] = interp_scalar(p[U2], i, j,k, coeff);
-        Vcon[3] = interp_scalar(p[U3], i, j,k, coeff);
+        Vcon[1] = interp_scalar_2D(p[U1], i, j,k, coeff);
+        Vcon[2] = interp_scalar_2D(p[U2], i, j,k, coeff);
+        Vcon[3] = interp_scalar_2D(p[U3], i, j,k, coeff);
 
         //Reconstruction of the four-velocity
         VdotV = 0.;

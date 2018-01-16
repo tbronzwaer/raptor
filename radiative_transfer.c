@@ -99,10 +99,8 @@ real radiative_transfer(real *X_u, real *k_u,real dl_current, real *frequency,in
                 // CGS UNITS USED FROM HERE ON OUT
                 //////////////////////////////////
                 for(f = 0; f < num_indices; f++) {
-                        if(tau[f] > log(1000.) ) {
-                                1;
-                        }
-                        else{
+                        if(tau[f] < log(1000.) ) {
+
                                 real Icurrent = intensity[icur][f];
                                 // Scale the wave vector to correct energy
                                 LOOP_i k_u_f[i] = k_u[i] * PLANCK_CONSTANT * frequency[f] /
@@ -110,48 +108,23 @@ real radiative_transfer(real *X_u, real *k_u,real dl_current, real *frequency,in
 
                                 //lower the index of the wavevector
                                 lower_index(X_u,g_dd,k_u_f,k_d);
-                                // Compute the photon frequency in the plasma frame:
 
+                                // Compute the photon frequency in the plasma frame:
                                 nu_p = freq_in_plasma_frame(Uplasma_u, k_d);
                                 nu_p2 = nu_p * nu_p;
-                                real j_nu_th, j_nu_nth;
+
                                 // Obtain emission coefficient in current plasma conditions
-                                if(Bern > 1.02 && 0) {
-                                        j_nu_nth = emission_coeff_kappa_FIT(nu_p,n_e,  THETA_e, B, beta, pitch_ang);
-                                        j_nu_th  = emission_coeff_THSYNCH(B,pitch_ang,  THETA_e, nu_p, n_e);
-                                        j_nu = 0.1 * j_nu_nth + 0.9 * j_nu_th;
-                                }
-                                else{
-                                        j_nu = emission_coeff_THSYNCH(B,pitch_ang,  THETA_e, nu_p, n_e);
-                                }
-                                //Obtain absorption coefficient
-                                real dtau=0;
-                                dl_current_f = dl_current *  Rg / ( frequency[f]);
+                                emission_coeff(B,pitch_ang, THETA_e, nu_p, n_e,&j_nu,&a_nu);
 
-                                if (ABSORPTION) {
-                                        //a_nu = absorption_coeff_TH(j_nu, nu_p, THETA_e);
-
-                                        if(Bern > 1.02 && 0) {
-                                                real a_nu_nth = absorption_coeff_kappa_FIT(nu_p,n_e,  THETA_e, B, beta, pitch_ang);
-                                                real a_nu_th  = absorption_coeff_TH(j_nu_th, nu_p, THETA_e);
-                                                a_nu = 0.1 * a_nu_nth + 0.9 * a_nu_th;
-                                        }
-                                        else{
-                                                a_nu = absorption_coeff_TH(j_nu, nu_p, THETA_e);
-                                        }
-
-                                        dtau  = (nu_p * a_nu * dl_current_f);
-                                }
-
-                                // Constant used in integration (to produce correct units)
+                                real dtau  = (nu_p * a_nu * dl_current_f);
                                 tau[f] += dtau;
                                 real dI =  (j_nu/nu_p2) * exp(-tau[f]) * dl_current_f; //j_nu*exp(-tau[f]);
 
                                 if( tau[f] < log(1000.) && !(tau[f]<0.0)) {
                                         Icurrent+= dI;
                                 }
-                                intensity[icur][f]=Icurrent;
 
+                                intensity[icur][f]=Icurrent;
                         }
                 }
                 /*
@@ -172,6 +145,6 @@ real radiative_transfer(real *X_u, real *k_u,real dl_current, real *frequency,in
                  */
 
         }
-        return 1; // * pow(frequency, 3.);
+        return 1;
 
 }

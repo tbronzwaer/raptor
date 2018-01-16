@@ -15,38 +15,39 @@
 #define e2_ch (1.161410e-03)
 
 //non thermal emission
+
+
+void emission_coeff(real B, real theta, real THETA_e, real nu_plasma, real n_e, real *j_nu, real *a_nu){
+
+        *j_nu = emission_coeff_THSYNCH(B, theta,  THETA_e, nu_plasma, n_e);
+
+        *a_nu = absorption_coeff_TH(*j_nu, nu_plasma, THETA_e);
+
+}
+
 real emission_coeff_kappa_FIT(real nu,real Ne, real Thetae, real B,real beta, real theta){
         //emissivity for the kappa distribution function, see Pandya et al. 2016
         real nuc, sth, nus, x,  w, X_kappa, factor;
         real J_low, J_high, J_s,kappa=0.;
-        //  real Rhigh = 2.01;
-        //  real Rlow = 2.01;
-        real b2 =  beta*beta/0.1;
-        // printf("%g\n", b2);
-        //  kappa = Rhigh * b2/(1+b2) + Rlow / (1 + b2);
+
         kappa=3.5;
-        w = Thetae; //sqrt(  2./9./kappa *Thetae * Thetae);
+        w = Thetae;
         nuc = ELECTRON_CHARGE * B / (2. * M_PI * ELECTRON_MASS * SPEED_OF_LIGHT);
         sth = sqrt(1-theta*theta); //sin(theta);
 
         factor = (Ne * pow(ELECTRON_CHARGE, 2.) * nuc * sth)/SPEED_OF_LIGHT;
 
-        //      fprintf(stderr,"sinth %g\n", sth);
         nus = nuc * sth * pow( w * kappa,2);
         if(nu==1.0 || fabs(theta)==1 )
                 return 0;
-        // if (nu > 1.e14 * nus || Thetae > 400. || Thetae < .1)
-        //     return (0.000);
+
         X_kappa = nu / nus;
-        //      fprintf(stderr, "X_kappa %g\n", X_kappa);
         J_low = pow(X_kappa,1./3.) * 4 * M_PI * tgamma(kappa - 4./3.) /(pow(3,7./3.) * tgamma(kappa - 2.));
-        //      fprintf(stderr, "J_low %g\n", J_low);
         J_high = pow(X_kappa,-(kappa-2)/2.) * pow(3,(kappa-1)/2.) * (kappa - 2.)*(kappa - 1.)/4. * tgamma(kappa/4. - 1./3.) * tgamma(kappa/4. + 4./3.);
-        //      fprintf(stderr, "J_high %g\n", J_high );
         x = 3 * pow(kappa,-3./2.);
 
         J_s = pow( ( pow(J_low,-x) + pow(J_high,-x) ), -1./x );
-        //      fprintf(stderr,"J_s %g\n", J_s * factor);
+
         if(J_s!=J_s) {
                 printf("B %e\n",B);
                 printf("J_s %e %e %e %e %e %e %e %e %e\n", X_kappa,B,nuc, theta, nus,J_low,J_high,x,kappa);
@@ -59,23 +60,19 @@ real absorption_coeff_kappa_FIT(real nu, real Ne, real Thetae, real B, real beta
         // absortion for the kappa distribution function, see Pandya et al. 2016
         real nuc, sth, nus, x, w, X_kappa, factor,kappa=0.;
         real A_low, A_high, A_s;
-        // real Rhigh = 5.;
-        // real Rlow = 5.;
-        real b2 =  beta*beta;
-        //  kappa = Rhigh * b2/(1+b2) + Rlow / (1 + b2);
-        w = Thetae; //sqrt(2./9./kappa *Thetae * Thetae);
+
+        w = Thetae;
         nuc = ELECTRON_CHARGE * B / (2. * M_PI * ELECTRON_MASS * SPEED_OF_LIGHT);
-        sth =  sqrt(1-theta*theta); //sin(theta);
+        sth =  sqrt(1-theta*theta);
         kappa=3.5;
 
         factor = Ne * ELECTRON_CHARGE /(  B *sth);
         if(nu==1.0 || fabs(theta)==1.)
                 return 0;
         nus =  nuc * sth *pow( w * kappa,2);
-        // if (nu > 1.e14 * nus || Thetae > 400. || Thetae < .1)
-        //      return (0.0000);
+
         X_kappa = nu / nus;
-//     gsl_set_error_handler_off();
+
         //identity to be able to calculate a hypergeometric function, from the code symphony by Pandya et al. 2016
 
         real a = kappa - 1./3.;
@@ -97,22 +94,15 @@ real absorption_coeff_kappa_FIT(real nu, real Ne, real Thetae, real B, real beta
 
         else
                 hyp2F1 = gsl_sf_hyperg_2F1(a,b,c,z);
-        //  if(hyp2F1!=hyp2F1)
-//	printf("%e %e %e\n",z,kappa,w);
-        A_low = pow(X_kappa, -5./3.) * pow(3,1./6.) * (10./41.) * pow(2* M_PI,2) / pow(w*kappa, 16./3. - kappa) * (kappa - 2.)*(kappa - 1.) * kappa / (3.*kappa -1.) * tgamma(5./3.) * hyp2F1;
-        //      fprintf(stderr, "A_low %g\n", A_low);
-        A_high = pow(X_kappa, -(3.+kappa)/2.) * (pow(M_PI,5./2.)/3.) * ((kappa - 2. )* (kappa - 1.) * kappa /pow(w*kappa,5.)) * (2* tgamma(2.+ kappa/2.)/(2.+kappa) -1.) * (pow(3./kappa,19./4.) + 3./5.);
 
-        //      fprintf(stderr, "A_high %g\n", A_high);
+        A_low = pow(X_kappa, -5./3.) * pow(3,1./6.) * (10./41.) * pow(2* M_PI,2) / pow(w*kappa, 16./3. - kappa) * (kappa - 2.)*(kappa - 1.) * kappa / (3.*kappa -1.) * tgamma(5./3.) * hyp2F1;
+        A_high = pow(X_kappa, -(3.+kappa)/2.) * (pow(M_PI,5./2.)/3.) * ((kappa - 2. )* (kappa - 1.) * kappa /pow(w*kappa,5.)) * (2* tgamma(2.+ kappa/2.)/(2.+kappa) -1.) * (pow(3./kappa,19./4.) + 3./5.);
 
         x = pow(-7./4. +8. * kappa / 5., -43./50.);
 
-        //      fprintf(stderr,"factor %g\n",factor);
-
         A_s = pow( ( pow(A_low,-x) + pow(A_high,-x) ), -1./x );
-        //      fprintf(stderr, "A_s %g\n", A_s*factor);
-        return (factor*A_s);
 
+        return (factor*A_s);
 }
 
 

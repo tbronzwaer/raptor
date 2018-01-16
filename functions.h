@@ -115,13 +115,9 @@ void initialize_photon(real alpha, real beta, real photon_u[8], real t_init);
 // RADIATIVE_TRANSFER.C
 ///////////////////////
 
-void read_in_table(char* filename);//, real ****j_nu_data, real ****alpha_nu_data);
-void init_memory_kappa();//real ****j_nu_data,real ****alpha_nu_data);
-real interpolate_scalar_4d(real ****A, real nuratio, real kappa, real Thetae, real theta);
-real interpolate_scalar_2d(real **var, real nuratio, real Thetae);
 
-real absorption_coeff_kappa(real **** alpha_nu_data,real nu,real Ne, real Thetae, real B,real beta, real theta);
-real emission_coeff_kappa(real **** j_nu_data,real nu,real Ne, real Thetae, real B,real beta, real theta);
+//
+void emission_coeff(real B, real theta, real THETA_e, real nu_plasma, real n_e, real *j_nu, real *a_nu);
 
 // Return emission coefficient j_nu for kappa distribution function
 //#pragma acc routine(emission_coeff_kappa_FIT)
