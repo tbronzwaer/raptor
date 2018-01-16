@@ -156,7 +156,7 @@ void output_files(real ** intensityfield,real energy_spectrum[num_indices],real 
 #if (SPECFILE)
         char spec_filename[256] = "";
         sprintf(spec_filename, "%s/spectrum_%d_%.02lf.dat",spec_folder,(int)TIME_INIT,INCLINATION);
-        FILE *spectrum    = fopen(spec_filename, "w");
+        FILE *specfile    = fopen(spec_filename, "w");
 #endif
 
         for(int f = 0; f < num_indices; f++) { // For all frequencies...
@@ -174,17 +174,18 @@ void output_files(real ** intensityfield,real energy_spectrum[num_indices],real 
                 char vtk_filename[256] = "";
 
                 sprintf(vtk_filename, "%s/img_data_%d_%e_%.02lf.vtk",spec_folder,(int)TIME_INIT,frequencies[f],INCLINATION);
-                FILE *fp          = fopen(vtk_filename, "w");
-                write_VTK_image(fp, intensityfield,f,JANSKY_FACTOR);
-                fclose(fp);
+                FILE *vtkfile          = fopen(vtk_filename, "w");
+                write_VTK_image(vtkfile, intensityfield,f,JANSKY_FACTOR);
+                fclose(vtkfile);
 #endif
 
 
                 fprintf(stderr,"Frequency %.5e Integrated flux density = %.5e\n", frequencies[f],JANSKY_FACTOR * energy_spectrum[f]);
 
 #if (SPECFILE)
-                fprintf(spectrum, "%+.15e\t%+.15e\n", frequencies[f], JANSKY_FACTOR * energy_spectrum[f]);
+                fprintf(specfile, "%+.15e\t%+.15e\n", frequencies[f], JANSKY_FACTOR * energy_spectrum[f]);
 #endif
         }
+        fclose(specfile);
 
 }

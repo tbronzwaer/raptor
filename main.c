@@ -44,7 +44,7 @@
 #include "parameters.h"
 
 int main(int argc, char *argv[]){
-        fprintf(stderr, "BOOTING UP RAPTOR\n");
+        fprintf(stderr, "BOOTING UP RAPTOR\n\n");
 
         clock_t start = clock();
 
