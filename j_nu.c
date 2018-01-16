@@ -122,12 +122,7 @@ real emission_coeff_THSYNCH(real B, real theta, real THETA_e, real nu_plasma, re
                 fprintf(stderr,"problems nu plasma equals 1");
                 return 0;
         }
-        /*
-           if(THETA_e >0)
-            K2=2*THETA_e*THETA_e;
-           else
-            K2 =0.;//
-         */
+
         if(THETA_e>1e-4)
                 K2 = gsl_sf_bessel_Kn(2, 1. / THETA_e);
         else
@@ -148,9 +143,6 @@ real emission_coeff_THSYNCHAV(real B, real THETA_e, real nu_p, real n_e){
                                                0.5316 / sqrt(x_M)) * exp(-1.8899 * pow(x_M, 1. / 3.));
         real j_nu = nu_p * n_e /
                     (2. * sqrt(3.)) * 1. / (THETA_e * THETA_e) * I;
-        //    printf("%lf %lf %lf j nu %.40lf\n",x_M, I,nu_c,j_nu);
-        //    j_nu = THETA_e * (ELECTRON_MASS * SPEED_OF_LIGHT * SPEED_OF_LIGHT) / BOLTZMANN_CONSTANT;
-        //    j_nu = n_e;
 
         return j_nu;
 }

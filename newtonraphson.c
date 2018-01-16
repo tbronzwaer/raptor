@@ -12,15 +12,14 @@
 real f_Xg2(real Xg2, real Xr2,real lr,int init){
 
         return M_PI * Xg2 + 0.5 * (1. - hslope) * sin(2. * M_PI * Xg2) - Xr2;
-
 }
 
 // Returns the value of f'(Xg2).
 #pragma acc routine (f_primed_Xg2)
 
 real f_primed_Xg2(real Xg2,real lr,int init){
-        return M_PI + M_PI * (1. - hslope) * cos(2. * M_PI * Xg2);
 
+        return M_PI + M_PI * (1. - hslope) * cos(2. * M_PI * Xg2);
 }
 
 // This function does "one Newton-Raphson step", i.e. it returns the NEW,
@@ -39,7 +38,6 @@ real NR_stepX(real Xg2_0, real Xr2,real lr,int init){
 real f_Ug2(real Ug2, real Ug1, real Ur2, real Xg2, real lr,int init){
 
         return M_PI * Ug2 * (1. + (1. - hslope) * cos(2. * M_PI * Xg2)) - Ur2;
-
 }
 
 // Returns the value of f'(Ug2).
@@ -48,7 +46,6 @@ real f_Ug2(real Ug2, real Ug1, real Ur2, real Xg2, real lr,int init){
 real f_primed_Ug2(real Ug2, real Xg2, real lr,int init){
 
         return M_PI * (1. + (1. - hslope) * cos(2. * M_PI * Xg2));
-
 }
 
 // This function does "one Newton-Raphson step", i.e. it returns the NEW,
@@ -71,11 +68,9 @@ real Xg2_approx_rand(real Xr2, real lr,int init2){
         int maxsteps = 1000;
         int count = 0;
 
-
         // Main loop
         while (fabs(Xg2_current - Xg2_prev) > tolerance*fabs(Xg2_current) && Xg2_current!=Xg2_prev) {
                 Xg2_current =genrandrcarry();
-                //    Xg2_current = (real) rand() / (real)RAND_MAX;
                 steps = 0;
                 count++;
                 while(steps < maxsteps && fabs(Xg2_current - Xg2_prev) > tolerance*fabs(Xg2_current) && Xg2_current!=Xg2_prev) {
@@ -98,16 +93,10 @@ real Ug2_approx_rand(real Ur2, real Ug1,real Xg2, real lr,int init2){
         real tolerance = 1.e-9; // Maximum error
         int steps = 0;
         int maxsteps = 1000;
-        // srand(1337);
-        float randnumb[10];
         int count = 0;
-        real s = 2.;
-        real x0 = log(50.);
-        real h2 = 0.35;
-        //   return  (Ur2 - Ug1*4.*(-s)* (h2 /M_PI) * sin(2. * M_PI * Xg2)*1/(1.+(s*(x0-lr))*(s*(x0-lr))))/(M_PI + 4* h2 * cos(2. * M_PI * Xg2)*atan2(s*(x0-lr),1));
+
         // Main loop
         while (fabs(Ug2_current - Ug2_prev) > tolerance*fabs(Ug2_current) && Ug2_current!=Ug2_prev) {
-                //  Ug2_current = (real) rand() / (real)RAND_MAX;
                 Ug2_current=genrandrcarry();
                 steps = 0;
                 count++;
