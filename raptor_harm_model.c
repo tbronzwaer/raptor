@@ -152,7 +152,7 @@ void init_harm_data(char *fname)
         Ladv /= 21.;
         fprintf(stderr, "dMact: %g Macc: %e [Msun/year], Ladv: %g\n", dMact, dMact * M_UNIT / T_unit / (MSUN / YEAR),Ladv); //0.05279
         fprintf(stderr, "Done reading data\n\n");
-        //p[0:NPRIM][0:N1][0:N2]
+
 #pragma acc copyin(Ne_unit,B_unit,U_unit,Thetae_unit,RHO_unit,R0,Rin,Rh,Rout,Rms,hslope,dMact,Ladv)
 
 }
@@ -212,7 +212,6 @@ int get_fluid_params(real X[NDIM], real *Ne,
         for (i = 1; i < NDIM; i++)
                 Ucon[i] = Vcon[i] - Vfac * gcon[0][i];
 
-
         lower_index(X, gcov, Ucon, Ucov);
 
         // Get B and Bcov
@@ -261,12 +260,6 @@ int get_fluid_params(real X[NDIM], real *Ne,
                 return 0;
         }
 
-
-        if (SPHERICAL_ACC) {
-                real r, theta;
-                r=exp(X[1])+R0;
-                *B = sqrt(8. * M_PI * rho / r) * B_unit; // MODIFIED TO ADD B FIELD TO BONDI ACCRETION
-        }
 
         if(0) {
                 printf("\nBcon[0] = %+.15e\n", Bcon[0]);
