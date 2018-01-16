@@ -20,8 +20,8 @@ for i in range (0,1):
 	line = f.readline()
 	header = line.split()
 
-	print "Flux of", float(header[2]), "at frequency ", float(header[3])
-	print "Munit of ", header[4], "viewing angle of ", header[5], "Rlow ", header[6], "Rhigh", header[7]
+	print "Flux of", float(header[2]), "at frequency", float(header[3])
+	print "Munit of", header[4], "viewing angle of", header[5], "Rlow of", header[6], "Rhigh of", header[7]
 
 	img_size=int(header[0])
 	img_size2=int(header[1])
