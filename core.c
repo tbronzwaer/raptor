@@ -35,13 +35,11 @@ void read_model( char *argv[]){
 
         // INPUT AND OUTPUT FILES
         sscanf(argv[2], "%s", GRMHD_FILE);
-        sscanf(argv[3], "%s", OUTPUT_FILE);
-
-        sscanf(argv[4], "%lf", &M_UNIT);
-        sscanf(argv[5], "%lf", &INCLINATION);
-        sscanf(argv[6], "%lf", &R_HIGH);
-        sscanf(argv[7], "%lf", &R_LOW);
-        sscanf(argv[8], "%lf", &TIME_INIT);
+        sscanf(argv[3], "%lf", &M_UNIT);
+        sscanf(argv[4], "%lf", &INCLINATION);
+        sscanf(argv[5], "%lf", &R_HIGH);
+        sscanf(argv[6], "%lf", &R_LOW);
+        sscanf(argv[7], "%lf", &TIME_INIT);
 
         fprintf(stderr,"Model parameters:\n");
         fprintf(stderr,"MBH \t\t= %g \n", MBH);
@@ -166,8 +164,8 @@ void output_files(real ** intensityfield,real energy_spectrum[num_indices],real 
 
 #if (IMGFILE)
                 char dat_filename[256] = "";
-                //sprintf(dat_filename, "%s/img_data_%d_%e_%.02lf.dat",spec_folder,(int)TIME_INIT,frequencies[f],INCLINATION);
-                FILE *imgfile     = fopen(OUTPUT_FILE, "w");
+                sprintf(dat_filename, "%s/img_data_%d_%e_%.02lf.dat",spec_folder,(int)TIME_INIT,frequencies[f],INCLINATION);
+                FILE *imgfile     = fopen(dat_filename, "w");
                 write_image(imgfile, intensityfield,f, JANSKY_FACTOR);
                 fclose(imgfile);
 
