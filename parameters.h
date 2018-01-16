@@ -99,19 +99,6 @@ real gam;
 real dMsim;
 real ****p;
 
-int N_kappa,N_theta, N_theta_e, N_B, N_n_e,  N_nuratio, N_nu;
-real kappa_min, kappa_max, d_kappa;
-real theta_min, theta_max, d_theta;
-real theta_e_min, theta_e_max, d_theta_e;
-real B_min, B_max, d_B;
-real n_e_min, n_e_max, d_n_e;
-real nuratio_min, nuratio_max, d_nuratio;
-real nu_min, nu_max, d_nu;
-real ****j_nu_data, ****alpha_nu_data;
-
-
-real gamma_min,gamma_max,gamma_cutoff;
-
 
 // METRIC PARAMETERS
 ////////////////////
