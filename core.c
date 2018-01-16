@@ -130,6 +130,8 @@ void calculate_image( real ** intensityfield, real energy_spectrum[num_indices],
                                 intensityfield2[k-l1][fr]=0;
 #elif (LINEAR_IMPACT_CAM)
                                 intensityfield[k][fr]=intensityfield2[k-l1][fr] * pow(frequencies[fr], 3.); //* e2_c;
+                                intensityfield2[k-l1][fr]=0;
+
 #endif
                         }
                 }

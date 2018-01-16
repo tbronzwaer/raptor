@@ -29,15 +29,11 @@ void set_constants(real t){
         // We want Jansky/pixel^2.
         real delta_x, delta_y, d_x,d_y;
 
-#if (NORMCAM)
+#if (LINEAR_IMPACT_CAM)
         d_x     = CAM_SIZE_X * R_GRAV; // Size of image in cm
         delta_x = d_x / source_dist; // it is far away so just a ratio without tan
         d_y     = CAM_SIZE_Y * R_GRAV; // Size of image in cm
         delta_y = d_y / source_dist; // it is far away so just a ratio without tan
-#endif
-
-
-#if (LINEAR_IMPACT_CAM)
         real pixsize = (delta_x / (real) IMG_WIDTH) * (delta_y / (real) IMG_HEIGHT); // Pix size in Sr
 #elif (LOG_IMPACT_CAM)
         real pixsize = 1;
