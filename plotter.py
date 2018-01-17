@@ -6,7 +6,7 @@ from scipy import signal
 from scipy.interpolate import griddata
 from scipy.interpolate import interp2d
 
-filename='output/img_data_1_2.300000e+11_60.00.dat'
+filename='output/img_data_1_2.300000e+11_90.00.dat'
 outputfile='output/img.png'
 
 print "RAPTOR imaging visualization script\n"
