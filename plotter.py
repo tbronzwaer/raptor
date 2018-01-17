@@ -9,7 +9,7 @@ from scipy.interpolate import interp2d
 filename='output/img_data_1_2.300000e+11_90.00.dat'
 outputfile='output/img.png'
 
-print "RAPTOR imaging visualization script\n"
+print "RAPTOR imaging visualization script \n"
 
 print "Reading header...\n"
 
