@@ -168,6 +168,8 @@ void output_files(real ** intensityfield,real energy_spectrum[num_indices],real 
                 char dat_filename[256] = "";
                 sprintf(dat_filename, "%s/img_data_%d_%e_%.02lf.dat",spec_folder,(int)TIME_INIT,frequencies[f],INCLINATION);
                 FILE *imgfile     = fopen(dat_filename, "w");
+                printf("%s\n",GRMHD_FILE);
+                fprintf(imgfile,"%d %d %e %e %s %e %e %e %e\n",IMG_WIDTH, IMG_HEIGHT, JANSKY_FACTOR *energy_spectrum[f],frequencies[f],GRMHD_FILE,M_UNIT,INCLINATION,R_LOW,R_HIGH);
                 write_image(imgfile, intensityfield,f, JANSKY_FACTOR);
                 fclose(imgfile);
 
