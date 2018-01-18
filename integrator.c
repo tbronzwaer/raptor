@@ -110,7 +110,7 @@ real stepsize(real X_u[4], real U_u[4]){
         real SMALL =  1.e-20;
 
         real dlx1  = STEPSIZE / (fabs(U_u[1]) + SMALL*SMALL);
-        real dlx2  = STEPSIZE * fmin( X_u[2], 1. - X_u[2])/ (fabs(U_u[2]) + SMALL*SMALL); //TODO watch out with MKS raptor convention. 1. - X2 -> M_PI - X2
+        real dlx2  = STEPSIZE * fmin( X_u[2], 1. - X_u[2])/ (fabs(U_u[2]) + SMALL*SMALL);
         real dlx3  = STEPSIZE / (fabs(U_u[3]) + SMALL*SMALL);
 
         real idlx1 = 1. / (fabs(dlx1) + SMALL*SMALL);
@@ -146,17 +146,26 @@ void f_geodesic(real *y, real *fvector){
 
 // Integrate the null geodesic defined by "photon_u"
 void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num_indices],real *frequencies, real **** p,real t,real Xcam[4],real Ucam[4]){
+        // Variables
         int f,i, q;
         real t_init = 0.;
         real dlambda_adaptive;
         int theta_turns = 0;
         real thetadot_prev;
         real X_u[4], k_u[4];
-        real tau[num_indices];
         real alpha,beta;
+        real tau[num_indices];
         for( f = 0; f < num_indices; f++)
                 tau[f]=0.0;
+        real lightpath[15];
+        for( i=0; i<15; i++)
+                lightpath[i]=0;
+        int steps = 0;
+        real photon_u[8];
+        for( i=0; i<8; i++)
+                photon_u[i]=0;
 
+        // "GEOD" means that RAPTOR outputs information about the geodesics it computes.
 #if (GEOD)
         struct stat st = {0};
         char geod_folder[256]="";
@@ -170,14 +179,6 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
         sprintf(geod_filename,"%s/geodesic_%d_%d.dat",geod_folder,x,y);
         FILE *geod = fopen(geod_filename,"w");
 #endif
-
-        real lightpath[15];
-        for( i=0; i<15; i++)
-                lightpath[i]=0;
-        int steps = 0;
-        real photon_u[8];
-        for( i=0; i<8; i++)
-                photon_u[i]=0;
 
         // Create initial ray conditions
 #if (LINEAR_IMPACT_CAM)
@@ -196,10 +197,10 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
 #endif
         initialize_photon(alpha, beta, photon_u, t_init);
 
-        LOOP_i {
+        // Construct "photon_u"
+        LOOP_i{
                 X_u[i] = photon_u[i];
         }
-
 
 #if (GEOD)
         fprintf(geod,"%e %e %e\n",X_u[1],X_u[2],X_u[3]);
@@ -214,7 +215,6 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
 
         // Trace light ray until it reaches the event horizon or the outer
         // cutoff, or steps > max_steps
-
 
 #if ( metric == BL || metric == MBL)
         // Stop condition for BL coords
@@ -231,10 +231,11 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
                         X_u[i] = photon_u[i];
                         k_u[i] = photon_u[i + 4];
                 }
+
 #if (GEOD)
-//            real theta = M_PI * X_u[2] + 0.5 * (1. - hslope) * sin(2. * M_PI * X_u[2]);
                 fprintf(geod,"%e %e %e\n",X_u[1],X_u[2],X_u[3]); //r_current*sin(theta)*cos(X_u[3]),r_current*sin(theta)*sin(X_u[3]),r_current*cos(theta));
 #endif
+
                 // Possibly terminate ray to eliminate higher order images
                 if (thetadot_prev * photon_u[6] < 0. && steps > 2)
                         theta_turns += 1;
@@ -243,9 +244,8 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
                         TERMINATE = 1;
 
                 // Compute adaptive step size
-                //        dlambda_adaptive = -STEPSIZE;
-
                 dlambda_adaptive = stepsize(X_u, k_u);
+
                 // Enter current position/velocity/dlambda into lightpath
                 for (q = 0; q < 8; q++)
                         lightpath[ q] = photon_u[q];
@@ -260,12 +260,13 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
                 rk2_step(photon_u, dlambda_adaptive);
 #endif
 
-                LOOP_i {X_u[i] = photon_u[i];
-                        k_u[i] = photon_u[i + 4]; }
-
-                if(X_u[1] > stopx[1] &&  k_u[1] < 0) {
-                        break;
+                LOOP_i {
+                        X_u[i] = photon_u[i];
+                        k_u[i] = photon_u[i + 4];
                 }
+
+                if(X_u[1] > stopx[1] &&  k_u[1] < 0)
+                        break;
 
                 r_current = logscale ? exp(photon_u[1]) : photon_u[1];
 
@@ -274,10 +275,10 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
                         radiative_transfer(X_u,k_u,lightpath[8], frequencies,icur,intensityfield2,tau,p);
 #endif
 
+                // Update lambda, r_current, and steps.
                 lambda += fabs(dlambda_adaptive);
                 r_current = logscale ? exp(photon_u[1]) : photon_u[1];
                 steps = steps + 1;
-
         }
 #if (GEOD)
         fclose(geod);

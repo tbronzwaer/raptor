@@ -23,10 +23,9 @@
 #define GGRAV              (6.6742e-8)
 #define MSUN               (1.989e33)
 #define MPoME              (1836.15) //(PROTON_MASS / ELECTRON_MASS)
-#define M_PI           3.14159265358979323846
-#define YEAR            (31536000.            )    /* No. of seconds in year */
-
-#define e2_c (7.695589048e-30)
+#define M_PI               (3.14159265358979323846)
+#define YEAR               (31536000.)    /* No. of seconds in year */
+#define e2_c               (7.695589048e-30)
 
 // Constants that must be evaluated at startup
 // (They depend on spin and other user-supplied parameters)

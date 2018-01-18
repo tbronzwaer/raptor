@@ -13,10 +13,17 @@
 #include <stdio.h>
 #include "parameters.h"
 
+// RAPTOR_HARM_MODEL.C
+//////////////////////
+
+// Initialize the GRMHD model (load data, create data structures, etc.)
 void init_model();
+
+// Obtain the local plasma parameters at position X.
 #pragma acc routine (get_fluid_params)
 int get_fluid_params(real X[NDIM], real *Ne,
                      real *Thetae, real *B, real *beta, real * Bern, real *B_u, real Ucon[NDIM], int *IN_VOLUME, real **** p,real gcov[NDIM][NDIM],real gcon[NDIM][NDIM]);
+
 // GRMATH.C
 ///////////
 
@@ -54,11 +61,15 @@ void BL_to_KS_u(real *BLphoton_u, real *KSphoton_u);
 void KS_to_BL_u(real *KSphoton_u, real *BLphoton_u);
 
 // CORE.C
-///////////////
+/////////
+
+// Create output files (image, spectrum, etc.)
 void output_files(real ** intesityfield,real spectrum[num_indices],real frequencies[num_indices]);
 
+// Integrate null geodesics, perform radiative transfer calculations, and compute the image.
 void calculate_image( real ** intensityfield, real spectrum[num_indices],real frequencies[num_indices]);
 
+// Read the model.in file, set constants accordingly.
 void read_model( char *argv[]);
 
 // INTEGRATOR.C
@@ -111,12 +122,10 @@ void connection_udd(const real X_u[4], real gamma_udd[4][4][4]);
 #pragma acc routine (initialize_photon)
 void initialize_photon(real alpha, real beta, real photon_u[8], real t_init);
 
-
 // RADIATIVE_TRANSFER.C
 ///////////////////////
 
-
-//
+// Obtain the emission coefficient given plasma parameters.
 void emission_coeff(real B, real theta, real THETA_e, real nu_plasma, real n_e, real *j_nu, real *a_nu);
 
 // Return emission coefficient j_nu for kappa distribution function
@@ -124,21 +133,18 @@ void emission_coeff(real B, real theta, real THETA_e, real nu_plasma, real n_e, 
 real emission_coeff_kappa_FIT(real nu,real Ne, real Thetae, real B,real beta, real theta);
 
 // Return absorption coefficient for kappa distribution function
-//#pragma acc routine(absorption_coeff_kappa_FIT)
 real absorption_coeff_kappa_FIT(real nu, real Ne, real Thetae, real B,real beta, real theta);
 
 // Return emission coefficient j_nu for thermal synchrotron radiation
 #pragma acc routine (emission_coeff_THSYNCH)
 real emission_coeff_THSYNCH(real B_, real theta, real THETA_e_, real nu_plasma, real n_e);
-#pragma acc routine (emission_coeff_THSYNCHAV)
+
 // Return emission coefficient for angle-averaged thermal synchrotron radiation
+#pragma acc routine (emission_coeff_THSYNCHAV)
 real emission_coeff_THSYNCHAV(real B_, real THETA_e_, real nu_plasma, real n_e);
 
 // Return emission coefficient for thermal free-free radiation
 real emission_coeff_FFTHERMAL(real nu, real n_e, real T);
-
-// Simple emissivity model: orbiting Gaussian hotspot (see Dexter 2009)
-real emissivity_hotspot(real *X_u);
 
 // Simple emissivity model: thin disk line emission (see Dexter 2009)
 real emissivity_thindisk(real *X_u);
@@ -180,12 +186,19 @@ void write_VTK_image(FILE *imgfile, real **intensityfield,int f, real scalefacto
 // prints time with respect to a start time
 void print_time(int start);
 
+// RCARRY.C
+///////////
 
-// RCARRY FUNCTIONS
+// Create a random, real number between 0 and 1.
 real genrandrcarry();
+
+// Initialize the RNG.
 void initrcarry(int seed_);
 
-// NEWTON-RAPHSON FUNCTIONS
+// NEWTON_RAPHSON.C
+///////////////////
+
+// Various functions needed to perform numerical Newton-Raphson evaluation of function zeroes.
 real f_Xg2(real Xg2, real Xr2,real lr,int init);
 real f_primed_Xg2(real Xg2,real lr,int init);
 real NR_stepX(real Xg2_0, real Xr2,real lr,int init);
@@ -194,6 +207,5 @@ real f_primed_Ug2(real Ug2, real Xg2, real lr,int init);
 real NR_stepU(real Ug2_0,real Ug1, real Ur2, real Xg2, real lr,int init);
 real Xg2_approx_rand(real Xr2, real lr,int init2);
 real Ug2_approx_rand(real Ur2, real Ug1,real Xg2, real lr,int init2);
-
 
 #endif // FUNCTIONS_H
