@@ -126,6 +126,7 @@ void initialize_photon(real alpha, real beta, real photon_u[8], real t_init);
 ///////////////////////
 
 // Obtain the emission coefficient given plasma parameters.
+#pragma acc routine (emission_coeff)
 void emission_coeff(real B, real theta, real THETA_e, real nu_plasma, real n_e, real *j_nu, real *a_nu);
 
 // Return emission coefficient j_nu for kappa distribution function
@@ -190,6 +191,7 @@ void print_time(int start);
 ///////////
 
 // Create a random, real number between 0 and 1.
+#pragma acc routine(genrandrcarry)
 real genrandrcarry();
 
 // Initialize the RNG.
@@ -199,13 +201,21 @@ void initrcarry(int seed_);
 ///////////////////
 
 // Various functions needed to perform numerical Newton-Raphson evaluation of function zeroes.
+#pragma acc routine(f_Xg2)
 real f_Xg2(real Xg2, real Xr2,real lr,int init);
+#pragma acc routine
 real f_primed_Xg2(real Xg2,real lr,int init);
+#pragma acc routine(f_primed_Xg2)
 real NR_stepX(real Xg2_0, real Xr2,real lr,int init);
+#pragma acc routine(NR_stepX)
 real f_Ug2(real Ug2, real Ug1, real Ur2, real Xg2, real lr,int init);
+#pragma acc routine(f_Ug2)
 real f_primed_Ug2(real Ug2, real Xg2, real lr,int init);
+#pragma acc routine(f_primed_Ug2)
 real NR_stepU(real Ug2_0,real Ug1, real Ur2, real Xg2, real lr,int init);
+#pragma acc routine(Xg2_approx_rand)
 real Xg2_approx_rand(real Xr2, real lr,int init2);
+#pragma acc routine(Ug2_approx_rand)
 real Ug2_approx_rand(real Ur2, real Ug1,real Xg2, real lr,int init2);
 
 #endif // FUNCTIONS_H

@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
         }
 
         // "intensityfield", which holds the image data
-        for(int i = 0; i < IMG_HEIGHT*IMG_WIDTH; i++) 
+        for(int i = 0; i < IMG_HEIGHT*IMG_WIDTH; i++)
         {
                 intensityfield[i]=(real*)malloc(num_indices*sizeof(real));
                 for(int f = 0; f < num_indices; f++)
@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
         // FREE ALLOCATED POINTERS
         //////////////////////////
 
-        free(intensityfield); free(p);
+        free(intensityfield);
 
         // END OF PROGRAM
         /////////////////

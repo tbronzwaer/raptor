@@ -43,7 +43,7 @@ double Ladv, dMact;
 void set_units(real);
 void init_harm_data(char *fname);
 void init_storage();
-#pragma acc routine(interp_scalar)
+#pragma acc routine(interp_scalar_2D)
 real interp_scalar_2D(real ***var, int i, int j,int k, real coeff[4]);
 #pragma acc routine(Xtoij)
 void Xtoij(real *X, int *i, int *j, real *del);

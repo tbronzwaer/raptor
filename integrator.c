@@ -8,7 +8,7 @@
 #include "functions.h"
 #include "parameters.h"
 #include "constants.h"
-
+#include "raptor_harm_model.h"
 // Updates the vector y (containing position/velocity) by one RK4 step.
 void rk4_step(real *y, real dt){
         // Array containing all "update elements" (4 times Nelements because RK4)
@@ -155,8 +155,10 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
         real X_u[4], k_u[4];
         real alpha,beta;
         real tau[num_indices];
-        for( f = 0; f < num_indices; f++)
+        for( f = 0; f < num_indices; f++) {
                 tau[f]=0.0;
+                intensityfield2[icur][f]=0.0;
+        }
         real lightpath[15];
         for( i=0; i<15; i++)
                 lightpath[i]=0;
@@ -198,7 +200,7 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
         initialize_photon(alpha, beta, photon_u, t_init);
 
         // Construct "photon_u"
-        LOOP_i{
+        LOOP_i {
                 X_u[i] = photon_u[i];
         }
 
@@ -240,8 +242,8 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
                 if (thetadot_prev * photon_u[6] < 0. && steps > 2)
                         theta_turns += 1;
                 thetadot_prev = photon_u[6];
-                if((beta < 0. && theta_turns > max_order) || (beta > 0. && theta_turns > (max_order + 1)))
-                        TERMINATE = 1;
+                //             if((beta < 0. && theta_turns > max_order) || (beta > 0. && theta_turns > (max_order + 1)))
+                //                   TERMINATE = 1;
 
                 // Compute adaptive step size
                 dlambda_adaptive = stepsize(X_u, k_u);
@@ -265,8 +267,8 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
                         k_u[i] = photon_u[i + 4];
                 }
 
-                if(X_u[1] > stopx[1] &&  k_u[1] < 0)
-                        break;
+                //            if(X_u[1] > stopx[1] &&  k_u[1] < 0)
+                //                  break;
 
                 r_current = logscale ? exp(photon_u[1]) : photon_u[1];
 

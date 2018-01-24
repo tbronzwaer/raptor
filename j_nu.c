@@ -119,12 +119,12 @@ real emission_coeff_THSYNCH(real B, real theta, real THETA_e, real nu_plasma, re
         real f    = pow(pow(X, 0.5) + pow(2., 11. / 12.) * pow(X, 1. / 6.), 2.);
         real K2;
         if(nu_plasma==1) {
-                fprintf(stderr,"problems nu plasma equals 1");
+                //fprintf(stderr,"problems nu plasma equals 1");
                 return 0;
         }
 
         if(THETA_e>1e-4)
-                K2 = gsl_sf_bessel_Kn(2, 1. / THETA_e);
+                K2 = 2*THETA_e * THETA_e;  //gsl_sf_bessel_Kn(2, 1. / THETA_e);
         else
                 return 0;
         real j_nu = n_e * sqrt(2.) * M_PI *

@@ -23,8 +23,6 @@ typedef double real;
 #include <time.h>
 #include "constants.h"
 
-#pragma pack(1)
-
 // OpenACC or OMP
 ////////////////////
 
@@ -32,15 +30,11 @@ typedef double real;
 #define OMP (1)
 #define COMP OMP
 
-#if(OMP)
-    #include <math.h>
-#endif
 
-#if(ACC)
-    #include <accel.h>
-    #include <accelmath.h>
-#endif
+#include <math.h>
 
+//#include <accel.h>
+//#include <accelmath.h>
 // OUTPUT SWITCHES
 ////////////////////
 
@@ -147,7 +141,6 @@ real M_UNIT;
 
 real R_HIGH;
 real R_LOW;
-
 #define source_dist    (2.6228263e22) // Distance to Sgr A* (cm)
 //#define source_dist    (5.061e25) // Distance to M87 (cm)
 
@@ -174,7 +167,7 @@ real FREQ_MAX;
 
 
 //	#define rcam         (15.)//(500.)    // Camera distance from the sing.(units of Rg)
-#define rcam         (1.e5)
+#define rcam         (1.e4)
 int IMG_WIDTH;
 int IMG_HEIGHT;
 real CAM_SIZE_X;
@@ -186,14 +179,14 @@ real CAM_SIZE_Y;
 real STEPSIZE;
 
 #define delta_num    (1.e-7)    // Used for numerical derivatives
-#define max_steps    (1e6)   // Maximum number of integration steps
+#define max_steps    (1e5)   // Maximum number of integration steps
 
 #define cutoff_outer (rcam*1.01)    // Outer cutoff, near flat spacetime, in M
-#define horizon_marg (1e-3)     // Stop tracing at this distance from E.H. [BL]
+#define horizon_marg (1e-1)     // Stop tracing at this distance from E.H. [BL]
 #define VER       (1)        //
 #define RK4       (2)        //
 #define RK2      (3)
-#define int_method   (RK4)     // method of integration 2=Verlet, 4-RK4
+#define int_method   (RK2)     // method of integration 2=Verlet, 4-RK4
 
 // MACROS
 /////////
@@ -226,6 +219,6 @@ for(l = 0; l < DIM; l++)
 #define N_theta_e 21
 #define N_nuratio 56
 
-#pragma acc copyin(IMG_WIDTH,IMG_HEIGHT,CAM_SIZE_X,CAM_SIZE_Y,cutoff_inner,ABSORPTION,MBH,INCLINATION,STEPSIZE,SPHERICAL_ACC,a)
+#pragma acc copyin(IMG_WIDTH,IMG_HEIGHT,CAM_SIZE_X,CAM_SIZE_Y,cutoff_inner,ABSORPTION,MBH,INCLINATION,STEPSIZE,SPHERICAL_ACC,a,R_LOW,R_HIGH,hslope)
 
 #endif // PARAMETERS_H

@@ -102,7 +102,7 @@ void init_harm_data(char *fname){
         dMact = 0.;
         Ladv = 0.;
 
-        for (k = 0; k < N1 * N2; k++){
+        for (k = 0; k < N1 * N2; k++) {
                 j = k % N2;
                 i = (k - j) / N2;
                 fscanf(fp, "%lf %lf %lf %lf", &x[1], &x[2], &r, &h);
@@ -141,7 +141,7 @@ void init_harm_data(char *fname){
         fprintf(stderr, "Done reading data\n\n");
 
         // Parallelization pragma statement
-        #pragma acc copyin(Ne_unit,B_unit,U_unit,Thetae_unit,RHO_unit,R0,Rin,Rh,Rout,Rms,hslope,dMact,Ladv)
+        #pragma acc copyin(Ne_unit,B_unit,U_unit,Thetae_unit,RHO_unit,R0,Rin,Rh,Rout,Rms,hslope,dMact,Ladv,R_LOW,R_HIGH)
 }
 
 // Get the flud parameters in the local co-moving plasma frame.

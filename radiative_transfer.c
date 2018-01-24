@@ -69,32 +69,32 @@ real radiative_transfer(real *X_u, real *k_u,real dl_current, real *frequency,in
                 // CGS UNITS USED FROM HERE ON OUT
                 //////////////////////////////////
                 for(f = 0; f < num_indices; f++) {
-                        if(tau[f] < log(1000.) ) {
+                        //  if(tau[f] < log(1000.) ) {
 
-                                real Icurrent = intensity[icur][f];
-                                // Scale the wave vector to correct energy
-                                LOOP_i k_u_f[i] = k_u[i] * PLANCK_CONSTANT * frequency[f] /
-                                                  (ELECTRON_MASS * SPEED_OF_LIGHT * SPEED_OF_LIGHT);
+                        real Icurrent = intensity[icur][f];
+                        // Scale the wave vector to correct energy
+                        LOOP_i k_u_f[i] = k_u[i] * PLANCK_CONSTANT * frequency[f] /
+                                          (ELECTRON_MASS * SPEED_OF_LIGHT * SPEED_OF_LIGHT);
 
-                                //lower the index of the wavevector
-                                lower_index(X_u,g_dd,k_u_f,k_d);
+                        //lower the index of the wavevector
+                        lower_index(X_u,g_dd,k_u_f,k_d);
 
-                                // Compute the photon frequency in the plasma frame:
-                                nu_p = freq_in_plasma_frame(Uplasma_u, k_d);
-                                nu_p2 = nu_p * nu_p;
+                        // Compute the photon frequency in the plasma frame:
+                        nu_p = freq_in_plasma_frame(Uplasma_u, k_d);
+                        nu_p2 = nu_p * nu_p;
 
-                                // Obtain emission coefficient in current plasma conditions
-                                emission_coeff(B,pitch_ang, THETA_e, nu_p, n_e,&j_nu,&a_nu);
-                                dl_current_f = dl_current *  Rg / ( frequency[f]);
-                                real dtau  = (nu_p * a_nu * dl_current_f);
-                                tau[f] += dtau;
-                                real dI =  (j_nu/nu_p2) * exp(-tau[f]) * dl_current_f; //j_nu*exp(-tau[f]);
+                        // Obtain emission coefficient in current plasma conditions
+                        emission_coeff(B,pitch_ang, THETA_e, nu_p, n_e,&j_nu,&a_nu);
+                        dl_current_f = dl_current *  Rg / ( frequency[f]);
+                        real dtau  = (nu_p * a_nu * dl_current_f);
+                        tau[f] += dtau;
+                        real dI =  (j_nu/nu_p2) * exp(-tau[f]) * dl_current_f;         //j_nu*exp(-tau[f]);
 
-                                if( tau[f] < log(1000.) && !(tau[f]<0.0)) {
-                                        Icurrent+= dI;
-                                }
-                                intensity[icur][f]=Icurrent;
+                        if( tau[f] < log(1000.) && !(tau[f]<0.0)) {
+                                Icurrent+= dI;
                         }
+                        intensity[icur][f]=Icurrent;
+                        //      }
                 }
                 /*
                    if(0 && (j_nu != j_nu || isnan(j_nu))){

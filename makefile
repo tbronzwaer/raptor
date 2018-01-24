@@ -16,7 +16,7 @@ else
 endif
 else
 	CC = pgcc
-	CFLAGS =  -acc -fast -Mautoinline -Minfo=accel -ta=tesla:cuda8.0,fastmath,maxregcount:255
+	CFLAGS =  -acc -Minfo=accel -ta=tesla:cuda8.0,fastmath,maxregcount:255
 	LDFLAGS = -lm -lgsl -lcblas
 endif
 
