@@ -141,7 +141,7 @@ void init_harm_data(char *fname){
         fprintf(stderr, "Done reading data\n\n");
 
         // Parallelization pragma statement
-        #pragma acc copyin(Ne_unit,B_unit,U_unit,Thetae_unit,RHO_unit,R0,Rin,Rh,Rout,Rms,hslope,dMact,Ladv,R_LOW,R_HIGH)
+        #pragma acc present_or_copyin(Ne_unit,B_unit,U_unit,Thetae_unit,RHO_unit,R0,Rin,Rh,Rout,Rms,hslope,dMact,Ladv,R_LOW,R_HIGH)
 }
 
 // Get the flud parameters in the local co-moving plasma frame.

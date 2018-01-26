@@ -300,7 +300,7 @@ void connection_udd(const real X_u[4], real gamma[4][4][4]){
         //////////////////////
         int i, j, k;
 //    for(k=0;k<NDIM*NDIM*NDIM;k++){ gamma[0][0][k] = 0.;}
-        LOOP_ijk gamma[i][j][k]=0.0;
+//     LOOP_ijk gamma[i][j][k]=0.0;
 
 #if (metric == CAR)
 

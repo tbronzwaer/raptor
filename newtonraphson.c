@@ -49,7 +49,7 @@ real NR_stepU(real Ug2_0,real Ug1, real Ur2, real Xg2, real lr,int init){
 real Xg2_approx_rand(real Xr2, real lr,int init2){
         real Xg2_current = 0.1; // Initial guess; reasonable b/c Xg2 E [0, 1]
         real Xg2_prev = 1.e-15; // Keeps track of previous estimate to converge
-        real tolerance = 1.e-9; // Maximum error
+        real tolerance = 1.e-6; // Maximum error
         int steps = 0;
         int maxsteps = 1000;
         int count = 0;
@@ -76,7 +76,7 @@ real Xg2_approx_rand(real Xr2, real lr,int init2){
 real Ug2_approx_rand(real Ur2, real Ug1,real Xg2, real lr,int init2){
         real Ug2_current = 0.1; // Initial guess; reasonable b/c Xg2 E [0, 1]
         real Ug2_prev = 1.e-15; // Keeps track of previous estimate to converge
-        real tolerance = 1.e-9; // Maximum error
+        real tolerance = 1.e-6; // Maximum error
         int steps = 0;
         int maxsteps = 1000;
         int count = 0;

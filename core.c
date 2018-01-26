@@ -75,74 +75,78 @@ void calculate_image( real ** intensityfield, real energy_spectrum[num_indices],
 
         static real intensityfield2[maxsize][num_indices];
 
-        int lmax = (int)((real)IMG_HEIGHT*IMG_WIDTH/(real)maxsize + 0.5);
-        if(lmax==0)
-                lmax=1.;
+        #pragma acc data copyin(Xcam[0:4],Ucam[0:4],IMG_WIDTH,IMG_HEIGHT,p[0:NPRIM][0:N1][0:N2][0:N3],frequencies[0:num_indices])
+        {
 
-        for(int i = 0; i < maxsize; i++) {
-                for(int f = 0; f < num_indices; f++) {
-                        intensityfield2[i][f]=0;
-                }
-        }
+                int lmax = (int)((real)IMG_HEIGHT*IMG_WIDTH/(real)maxsize + 0.5);
+                if(lmax==0)
+                        lmax=1.;
 
-        real start=clock();
-        real diff = clock() - start;
-        clock_t startgpu=clock();
-
-        int msec;
-        int l1,l2;
-        for(int l=0; l<lmax; l++) {
-                l1 =(int)l*maxsize;
-                l2 =(int)(l+1)*maxsize;
-
-                if(l2 >(IMG_WIDTH)*(IMG_HEIGHT))
-                        l2 =(IMG_WIDTH)*(IMG_HEIGHT);
-
-                //#pragma acc copyin(intensityfield2[0:1000][0:(num_indices)])
-//#pragma omp parallel for shared(energy_spectrum,frequencies,intensityfield,p) schedule(static,1)
-#pragma acc kernels vector_length(1) copyin(Xcam[0:4],Ucam[0:4],IMG_WIDTH,IMG_HEIGHT,intensityfield2[0:maxsize][0:num_indices],p[0:NPRIM][0:N1][0:N2][0:N3],frequencies[0:num_indices],l1,l2) copyout(intensityfield2[0:maxsize][0:(num_indices)])
-                for(int i=l1; i < l2; i++) { // For all pixel rows (distributed over threads)...
-                        int y=(int)(i/IMG_WIDTH);
-                        int x=(int)(i%IMG_WIDTH);
-
-                        // INTEGRATE THIS PIXEL'S GEODESIC AND PERFORM RADIATIVE TRANSFER AT DESIRED FREQUENCIES, STORE RESULTS
-                        int icur=(int)(i-l1);
-                        integrate_geodesic(icur,x,y,intensityfield2,frequencies,p,TIME_INIT,Xcam,Ucam);
-                }
-
-                diff=clock()-startgpu;
-                int msec = diff *1000/ (CLOCKS_PER_SEC);
-                printf("Done: %.02g %%, speed: %.02g [geodesics/sec]\n", 100.*(real)l2/((real)(IMG_WIDTH)*(IMG_HEIGHT)),(real)l2 /((real)msec/1000.));
-
-//#pragma omp parallel for shared(energy_spectrum,frequencies,intensityfield,p) schedule(static,1)
-                for(int k  = l1; k < l2; k++) { // For all pixel rows (distributed over threads)...
-                        for(int fr=0; fr<num_indices; fr++) {
-#if (LOG_IMPACT_CAM)
-                                int y=(int)(k/IMG_WIDTH);
-                                int x=(int)(k%IMG_WIDTH);
-                                real r_i = exp(log(20.)*(real)(x+0.5) /(real) IMG_WIDTH) - 1.;
-                                real theta_i = 2.*M_PI  * (real)(y+0.5)/ (real)IMG_HEIGHT;
-                                real alpha = r_i * cos(theta_i);
-                                real beta  = r_i * sin(theta_i);
-                                real d_r = R_GRAV * (r_i +1.) * log(20.)/(real)IMG_WIDTH;
-                                real d_theta = R_GRAV*2.* M_PI / (real)IMG_HEIGHT;
-
-                                intensityfield[k][fr]=intensityfield2[k-l1][fr] * pow(frequencies[fr], 3.)* r_i* d_r * d_theta/(source_dist*source_dist); // * e2_c;
-                                intensityfield2[k-l1][fr]=0;
-#elif (LINEAR_IMPACT_CAM)
-                                intensityfield[k][fr]=intensityfield2[k-l1][fr] * pow(frequencies[fr], 3.); //* e2_c;
-                                intensityfield2[k-l1][fr]=0;
-
-#endif
+                for(int i = 0; i < maxsize; i++) {
+                        for(int f = 0; f < num_indices; f++) {
+                                intensityfield2[i][f]=0;
                         }
                 }
-        }
-        free(p);
-#pragma acc wait
 
-        for(int i=0; i<IMG_WIDTH*IMG_HEIGHT; i++) {
-                for(int f=0; f<num_indices; f++) {
-                        energy_spectrum[f]+=intensityfield[i][f];
+                real start=clock();
+                real diff = clock() - start;
+                clock_t startgpu=clock();
+
+                int msec;
+                int l1,l2;
+                for(int l=0; l<lmax; l++) {
+                        l1 =(int)l*maxsize;
+                        l2 =(int)(l+1)*maxsize;
+
+                        if(l2 >(IMG_WIDTH)*(IMG_HEIGHT))
+                                l2 =(IMG_WIDTH)*(IMG_HEIGHT);
+
+                        //#pragma acc copyin(intensityfield2[0:1000][0:(num_indices)])
+//#pragma omp parallel for shared(energy_spectrum,frequencies,intensityfield,p) schedule(static,1)
+#pragma acc kernels loop independent copyin(l1,l2) copy(intensityfield2[0:maxsize][0:(num_indices)])
+                        for(int i=l1; i < l2; i++) { // For all pixel rows (distributed over threads)...
+                                int y=(int)(i/IMG_WIDTH);
+                                int x=(int)(i%IMG_WIDTH);
+
+                                // INTEGRATE THIS PIXEL'S GEODESIC AND PERFORM RADIATIVE TRANSFER AT DESIRED FREQUENCIES, STORE RESULTS
+                                int icur=(int)(i-l1);
+                                integrate_geodesic(icur,x,y,intensityfield2,frequencies,p,TIME_INIT,Xcam,Ucam);
+                        }
+
+                        diff=clock()-startgpu;
+                        int msec = diff *1000/ (CLOCKS_PER_SEC);
+                        printf("Done: %.02g %%, speed: %.02g [geodesics/sec]\n", 100.*(real)l2/((real)(IMG_WIDTH)*(IMG_HEIGHT)),(real)l2 /((real)msec/1000.));
+                        print_time(startgpu);
+//#pragma omp parallel for shared(energy_spectrum,frequencies,intensityfield,p) schedule(static,1)
+                        for(int k  = l1; k < l2; k++) { // For all pixel rows (distributed over threads)...
+                                for(int fr=0; fr<num_indices; fr++) {
+#if (LOG_IMPACT_CAM)
+                                        int y=(int)(k/IMG_WIDTH);
+                                        int x=(int)(k%IMG_WIDTH);
+                                        real r_i = exp(log(20.)*(real)(x+0.5) /(real) IMG_WIDTH) - 1.;
+                                        real theta_i = 2.*M_PI  * (real)(y+0.5)/ (real)IMG_HEIGHT;
+                                        real alpha = r_i * cos(theta_i);
+                                        real beta  = r_i * sin(theta_i);
+                                        real d_r = R_GRAV * (r_i +1.) * log(20.)/(real)IMG_WIDTH;
+                                        real d_theta = R_GRAV*2.* M_PI / (real)IMG_HEIGHT;
+
+                                        intensityfield[k][fr]=intensityfield2[k-l1][fr] * pow(frequencies[fr], 3.)* r_i* d_r * d_theta/(source_dist*source_dist); // * e2_c;
+                                        intensityfield2[k-l1][fr]=0;
+#elif (LINEAR_IMPACT_CAM)
+                                        intensityfield[k][fr]=intensityfield2[k-l1][fr] * pow(frequencies[fr], 3.); //* e2_c;
+                                        intensityfield2[k-l1][fr]=0;
+
+#endif
+                                }
+                        }
+                }
+                free(p);
+//#pragma acc wait
+
+                for(int i=0; i<IMG_WIDTH*IMG_HEIGHT; i++) {
+                        for(int f=0; f<num_indices; f++) {
+                                energy_spectrum[f]+=intensityfield[i][f];
+                        }
                 }
         }
 }

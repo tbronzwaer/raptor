@@ -117,7 +117,8 @@ real stepsize(real X_u[4], real U_u[4]){
         real idlx2 = 1. / (fabs(dlx2) + SMALL*SMALL);
         real idlx3 = 1. / (fabs(dlx3) + SMALL*SMALL);
 
-        return -(1. / (idlx1 + idlx2 + idlx3) + SMALL);
+        //  return -(1. / (idlx1 + idlx2 + idlx3) + SMALL);
+        return -fmax(1. / (idlx1 + idlx2 + idlx3),1e-12);
 }
 
 // The function to be used by the integrator for GR geodesic calculations.
@@ -242,8 +243,8 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
                 if (thetadot_prev * photon_u[6] < 0. && steps > 2)
                         theta_turns += 1;
                 thetadot_prev = photon_u[6];
-                //             if((beta < 0. && theta_turns > max_order) || (beta > 0. && theta_turns > (max_order + 1)))
-                //                   TERMINATE = 1;
+                if((beta < 0. && theta_turns > max_order) || (beta > 0. && theta_turns > (max_order + 1)))
+                        TERMINATE = 1;
 
                 // Compute adaptive step size
                 dlambda_adaptive = stepsize(X_u, k_u);
@@ -267,8 +268,8 @@ void integrate_geodesic(int icur,int x, int y, real intensityfield2[maxsize][num
                         k_u[i] = photon_u[i + 4];
                 }
 
-                //            if(X_u[1] > stopx[1] &&  k_u[1] < 0)
-                //                  break;
+                if(X_u[1] > stopx[1] &&  k_u[1] < 0)
+                        break;
 
                 r_current = logscale ? exp(photon_u[1]) : photon_u[1];
 
