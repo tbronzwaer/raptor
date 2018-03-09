@@ -250,47 +250,81 @@ void metric_uu(const real X_u[4], real g_uu[4][4]){
 #endif
 }
 
-// Returns the partial derivative of metric element g_dd[alpha][beta] w.r.t.
-// direction 'dir'
-real part_deriv_metric_dd(const real X_u[4], int dir, int alpha, int beta){
-        // Temporary variable X_u_temp will be modified, leaving original X_u intact
-        real X_u_temp[4] = {X_u[0], X_u[1], X_u[2], X_u[3]};
-        real g_dd[4][4];
-
-        // Get metric_dd at X + delta(dir), g_ab1[][]...
-        X_u_temp[dir] += delta_num;
-        metric_dd(X_u_temp, g_dd);
-        real plusdelta = g_dd[alpha][beta];
-
-        // ...and X - delta(dir), g_ab2[][]
-        X_u_temp[dir] -= 2. * delta_num;
-        metric_dd(X_u_temp, g_dd);
-        real minusdelta = g_dd[alpha][beta];
-
-        // Return the numerical derivative (central difference rule)
-        return (plusdelta - minusdelta) / (2. * delta_num);
-}
-
 // Computes the Christoffel symbols at location X numerically
 // (Requires the metric to be specified everywhere!)
 void connection_num_udd(const real X_u[4], real gamma_udd[4][4][4]){
-        // CASE 0: Minkowski metric
-        //////////////////////
-        int i, j, k;
-        LOOP_ijk gamma_udd[i][j][k] = 0.;
+    // CASE 0: Minkowski metric
+    //////////////////////
+    int i, j, k;
+    real temp[4][4][4];
+    LOOP_ijk gamma_udd[i][j][k] = 0.;
+    //memset(gamma_udd, 0, 64 * sizeof(real));
 
-        // Obtain metric at current position (contravariant form)
-        real g_uu[4][4];
-        metric_uu(X_u, g_uu);
+    // Obtain metric at current position (contravariant form)
+    real g_uu[4][4], g_dd_m[4][4],g_dd_p[4][4];
+    real dg[4][4][4];
+    real X_u_temp[4];
+    metric_uu(X_u, g_uu);
 
-        // Solve the Christoffel connection equation
-        int alpha;
-        for (alpha = 0; alpha < 4; alpha++)
-                LOOP_ijk // Index summation over k
-                        gamma_udd[alpha][i][j] += 0.5 * g_uu[alpha][k] *
-                                                  (part_deriv_metric_dd(X_u, j, k, i) +
-                                                   part_deriv_metric_dd(X_u, i, k, j) -
-                                                   part_deriv_metric_dd(X_u, k, i, j));
+      for(int i =0 ; i<4;i++){
+	X_u_temp[i] = X_u[i];
+      	X_u_temp[i] += delta_num;
+	metric_dd(X_u_temp, g_dd_p);
+
+        X_u_temp[i] -= 2. * delta_num;
+        metric_dd(X_u_temp, g_dd_m);
+
+        dg[i][0][0]= (g_dd_p[0][0] - g_dd_m[0][0] )/(2.*delta_num );
+        dg[i][1][0]= (g_dd_p[1][0] - g_dd_m[1][0] )/(2.*delta_num );
+        dg[i][2][0]= (g_dd_p[2][0] - g_dd_m[2][0] )/(2.*delta_num );
+        dg[i][3][0]= (g_dd_p[3][0] - g_dd_m[3][0] )/(2.*delta_num );
+
+        dg[i][0][1]= dg[i][1][0];
+        dg[i][1][1]= (g_dd_p[1][1] - g_dd_m[1][1] )/(2.*delta_num );
+        dg[i][2][1]= (g_dd_p[2][1] - g_dd_m[2][1] )/(2.*delta_num );
+        dg[i][3][1]= (g_dd_p[3][1] - g_dd_m[3][1] )/(2.*delta_num );
+
+        dg[i][0][2]= dg[i][2][0];
+        dg[i][1][2]= dg[i][2][1];
+        dg[i][2][2]= (g_dd_p[2][2] - g_dd_m[2][2] )/(2.*delta_num );
+        dg[i][2][3]= (g_dd_p[2][3] - g_dd_m[2][3] )/(2.*delta_num );
+     
+        dg[i][0][3]= dg[i][3][0];
+        dg[i][1][3]= dg[i][3][1];
+        dg[i][2][3]= dg[i][3][2];
+        dg[i][3][3]= (g_dd_p[3][3] - g_dd_m[3][3] )/(2.*delta_num );
+    }
+    // Solve the Christoffel connection equation
+    int alpha;
+
+    for (alpha = 0; alpha < 4; alpha++){
+          for(k = 0; k < DIM; k++){
+                    gamma_udd[alpha][0][0] +=  g_uu[alpha][k] * (0.5 * (2.* dg[0][k][0]- dg[k][0][0]));
+                    gamma_udd[alpha][0][1] +=  g_uu[alpha][k] * (0.5 * (dg[1][k][0] + dg[0][k][1] - dg[k][0][1]));
+                    gamma_udd[alpha][0][2] +=  g_uu[alpha][k] * (0.5 * (dg[2][k][0] + dg[0][k][2] - dg[k][0][2]));
+                    gamma_udd[alpha][0][3] +=  g_uu[alpha][k] * (0.5 * (dg[3][k][0] + dg[0][k][3] - dg[k][0][3]));
+
+                    gamma_udd[alpha][1][1] +=  g_uu[alpha][k] * (0.5 * (2.*dg[1][k][1]  - dg[k][1][1]));
+                    gamma_udd[alpha][1][2] +=  g_uu[alpha][k] * (0.5 * (dg[2][k][1] + dg[1][k][2] - dg[k][1][2]));
+                    gamma_udd[alpha][1][3] +=  g_uu[alpha][k] * (0.5 * (dg[3][k][1] + dg[1][k][3] - dg[k][1][3]));
+
+                    gamma_udd[alpha][2][2] +=  g_uu[alpha][k] * (0.5 * (2.*dg[2][k][2]  - dg[k][2][2]));
+                    gamma_udd[alpha][2][3] +=  g_uu[alpha][k] * (0.5 * (dg[3][k][2] + dg[2][k][3] - dg[k][2][3]));
+
+                    gamma_udd[alpha][3][3] +=  g_uu[alpha][k] * (0.5 * (2.*dg[3][k][3]  - dg[k][3][3]));
+	  }
+	gamma_udd[alpha][1][0]=gamma_udd[alpha][0][1];
+ 
+        gamma_udd[alpha][2][0]=gamma_udd[alpha][0][2];
+        gamma_udd[alpha][2][1]=gamma_udd[alpha][1][2];
+
+        gamma_udd[alpha][3][0]=gamma_udd[alpha][0][3];
+        gamma_udd[alpha][3][1]=gamma_udd[alpha][1][3];
+        gamma_udd[alpha][3][2]=gamma_udd[alpha][2][3];
+    }
+
+
+
 }
 
 // Computes the Christoffel symbols at location X based on an exact metric
