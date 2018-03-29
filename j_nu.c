@@ -118,7 +118,9 @@ real emission_coeff_THSYNCH(real B, real theta, real THETA_e, real nu_plasma, re
         real X    =nu_plasma /( nu_s);
         real f    = pow(pow(X, 0.5) + pow(2., 11. / 12.) * pow(X, 1. / 6.), 2.);
         real K2;
-        if(nu_plasma==1) {
+       
+        // Check for divergence of j_nu due to problematic pitch angles (happens in small number of cases)
+        if(nu_plasma==1 || fabs(sth) < 1.e-10) {
                 //fprintf(stderr,"problems nu plasma equals 1");
                 return 0;
         }
