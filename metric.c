@@ -287,7 +287,7 @@ void connection_num_udd(const real X_u[4], real gamma_udd[4][4][4]){
         dg[i][0][2]= dg[i][2][0];
         dg[i][1][2]= dg[i][2][1];
         dg[i][2][2]= (g_dd_p[2][2] - g_dd_m[2][2] )/(2.*delta_num );
-        dg[i][2][3]= (g_dd_p[2][3] - g_dd_m[2][3] )/(2.*delta_num );
+        dg[i][3][2]= (g_dd_p[3][2] - g_dd_m[3][2] )/(2.*delta_num );
      
         dg[i][0][3]= dg[i][3][0];
         dg[i][1][3]= dg[i][3][1];
