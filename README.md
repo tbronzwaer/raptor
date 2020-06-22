@@ -2,10 +2,10 @@
 This is the public version of the RAPTOR code for radiative transfer in arbitrary spacetimes. 
 
 # QUICK START
-```
-These instructions guide the user in downloading and compiling the source code, and then producing an image-datafile with RAPTOR, which can be plotted with the included Python plotting script.
+
+> These instructions guide the user in downloading and compiling the source code, and then producing an image-datafile with RAPTOR, which can be plotted with the included Python plotting script.
 Please note that these instructions expect the user to have a UNIX-like machine with a command terminal, and that OpenMP is installed.
-```
+
 Please download the repository, e.g., by typing:
 ```
 git clone https://github.com/tbronzwaer/raptor.git
