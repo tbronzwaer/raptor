@@ -18,7 +18,7 @@ Please note that these instructions expect the user to have a UNIX-like machine 
 
 -The CBLAS library
 
--Python 2.7 (only needed for plotting; a Python 3 compatible plotter script is coming soon)
+-Python (only needed for plotting)
 
 ### Downloading and compiling the RAPTOR code
 
