@@ -2,6 +2,8 @@
 
 This is the public version of the RAPTOR code for radiative transfer in arbitrary spacetimes. 
 
+<br />
+
 # QUICK START
 
 > These instructions guide the user in downloading and compiling the source code, and then producing an image-data file with RAPTOR, which can be plotted with the included Python plotting script.
@@ -40,11 +42,16 @@ Finally, one can run the included run.sh batch script, which will instruct RAPTO
 ```
 python plotter.py
 ```
+
+<br />
+
 # TROUBLESHOOTING & FAQ
 
 **Q: RAPTOR failed to compile because the -fopenmp flag caused a compatibility issue.**
 
 *A: A potential solution to this is to change the flag to -openmp instead. This ought to produce a fully functional executable, although I have not verified this. Thanks to user Saurabh for the feedback!*
+
+<br />
 
 # SUPPORT & CONTACT
 
