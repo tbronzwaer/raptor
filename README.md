@@ -23,7 +23,14 @@ Finally, one can run the included run.sh batch script, which will instruct RAPTO
 ```
 python plotter.py
 ```
+# TROUBLESHOOTING & FAQ
 
-# QUESTIONS?
+This section will be updated as comments/questions arrive.
+
+**Q: RAPTOR failed to compile because the -fopenmp flag caused a compatibility issue.**
+
+*A: A potential solution to this is to change the flag to -openmp instead. This ought to produce a fully functional executable, although I have not verified this. Thanks to user Saurabh for the feedback!*
+
+# SUPPORT & CONTACT
 
 Updates to RAPTOR, as well as the documentation, will soon be coming. If you have any questions, please contact me at t.bronzwaer[at]astro(dot)ru(dot)nl.
