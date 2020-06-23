@@ -5,7 +5,20 @@ This is the public version of the RAPTOR code for radiative transfer in arbitrar
 # QUICK START
 
 > These instructions guide the user in downloading and compiling the source code, and then producing an image-datafile with RAPTOR, which can be plotted with the included Python plotting script.
-Please note that these instructions expect the user to have a UNIX-like machine with a command terminal, and that the gcc compiler, OpenMP, and Python are installed.
+Please note that these instructions expect the user to have a UNIX-like machine with a command terminal.
+
+### Prerequisites / dependencies
+-The gcc compiler 
+
+-The OpenMP library
+
+-The GNU Scientific computing Library (GSL)
+
+-The CBLAS library
+
+-Python 2.7 (a Python 3 compatible plotter script is coming soon)
+
+### Downloading and compiling the RAPTOR code
 
 Please download the repository, e.g., by typing:
 ```
@@ -15,7 +28,11 @@ Next, it is necessary to compile the code using the included makefile. Please do
 ```
 make harm CPU=1
 ```
-If everything goes correctly, RAPTOR will now have been compiled, and an executable named RAPTOR will have been created. Please create an 'output' directory for RAPTOR (from the directory in which the RAPTOR executable resides):
+If everything goes correctly, RAPTOR will now have been compiled, and an executable named RAPTOR will have been created. 
+
+### Running the code and plotting the result
+
+Please create an 'output' directory for RAPTOR (from the directory in which the RAPTOR executable resides):
 ```
 mkdir output
 ```
@@ -24,8 +41,6 @@ Finally, one can run the included run.sh batch script, which will instruct RAPTO
 python plotter.py
 ```
 # TROUBLESHOOTING & FAQ
-
-This section will be updated as comments/questions arrive.
 
 **Q: RAPTOR failed to compile because the -fopenmp flag caused a compatibility issue.**
 
