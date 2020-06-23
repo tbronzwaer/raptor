@@ -9,32 +9,32 @@ from scipy.interpolate import interp2d
 filename='output/img_data_1_1.000000e+11_60.00.dat'
 outputfile='output/img.png'
 
-print "RAPTOR imaging visualization script \n"
+print("RAPTOR imaging visualization script \n")
 
-print "Reading header...\n"
+print("Reading header...\n")
 
 f = open(filename)
 line = f.readline()
 header = line.split()
-print "IMAGE INFORMATION"
-print "Image size", int(header[0]), "x", int(header[1])
-print "Flux of", float(header[2]), "at frequency", float(header[3])
+print("IMAGE INFORMATION")
+print("Image size", int(header[0]), "x", int(header[1]))
+print("Flux of", float(header[2]), "at frequency", float(header[3]))
 
-print "\nMODEL PARAMETERS"
-print "Used grmhd file:", header[4]
-print "Munit:", header[5]
-print "Viewing angle:", header[6]
-print "Rlow:", header[7]
-print "Rhigh:", header[8]
+print("\nMODEL PARAMETERS")
+print("Used grmhd file:", header[4])
+print("Munit:", header[5])
+print("Viewing angle:", header[6])
+print("Rlow:", header[7])
+print("Rhigh:", header[8])
 
-print "\nReading data..."
+print("\nReading data...")
 
 img_size=int(header[0])
 img_size2=int(header[1])
 
 data=np.loadtxt(filename,skiprows=1)+1e-20
 
-print "\nProcessing data..."
+print("\nProcessing data...")
 
 if(img_size!=img_size2):
 	xi = np.linspace(0,img_size,img_size2)
@@ -53,7 +53,7 @@ img = np.reshape(data,(-1,img_size))
 img = np.transpose(img)
 img = np.flipud(img)
 
-print "\nPlotting data..."
+print("\nPlotting data...")
 
 plt.clf()
 plt.close('all')
@@ -75,4 +75,4 @@ fig.tight_layout()
 
 plt.savefig(outputfile, bbox_inches='tight', transparent=False,pad_inches=0,dpi=1)
 
-print "\nDone!"
+print("\nDone!")
