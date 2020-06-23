@@ -4,7 +4,7 @@ This is the public version of the RAPTOR code for radiative transfer in arbitrar
 
 # QUICK START
 
-> These instructions guide the user in downloading and compiling the source code, and then producing an image-datafile with RAPTOR, which can be plotted with the included Python plotting script.
+> These instructions guide the user in downloading and compiling the source code, and then producing an image-data file with RAPTOR, which can be plotted with the included Python plotting script.
 Please note that these instructions expect the user to have a UNIX-like machine with a command terminal.
 
 ### Prerequisites / dependencies
@@ -16,7 +16,7 @@ Please note that these instructions expect the user to have a UNIX-like machine 
 
 -The CBLAS library
 
--Python 2.7 (a Python 3 compatible plotter script is coming soon)
+-Python 2.7 (only needed for plotting; a Python 3 compatible plotter script is coming soon)
 
 ### Downloading and compiling the RAPTOR code
 
