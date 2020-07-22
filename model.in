@@ -1,0 +1,14 @@
+MBH         	(g)		1.233e43
+M_UNIT      	(g)		1.672e26
+ABSORPTION	(-)		1
+TEMP_MODEL	(-)		NONE
+SPHERICAL_ACC   (-)             0
+
+IMG_WIDTH   	(pixels)	160
+IMG_HEIGHT  	(pixels)	160
+CAM_SIZE_X  	(Rg)		44.17
+CAM_SIZE_Y  	(Rg)		44.17
+FREQS_PER_DEC	(-)		1
+FREQ_MIN	(Hz)		230.e9
+FREQ_MAX	(Hz)		230.e9
+STEPSIZE	(-)		0.006
