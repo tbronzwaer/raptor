@@ -6,11 +6,17 @@ This is the public version of the RAPTOR code for radiative transfer in arbitrar
 
 ## UPDATE: POLARIZED RAPTOR
 
-The polarized version of RAPTOR may now be found in a new branch within this repository. This version of RAPTOR is described in the following publication:
+The polarized version of RAPTOR may now be found in a new branch within this repository:
+
+https://github.com/tbronzwaer/raptor/blob/polarization/README.md
+
+This version of RAPTOR is described in the following publication:
 
 https://arxiv.org/abs/2007.03045
 
 The polarized branch of RAPTOR is still under construction. Further updates and instructional materials are coming soon.
+
+<br />
 
 # QUICK START
 
