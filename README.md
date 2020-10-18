@@ -4,6 +4,14 @@ This is the public version of the RAPTOR code for radiative transfer in arbitrar
 
 <br />
 
+## UPDATE: POLARIZED RAPTOR
+
+The polarized version of RAPTOR may now be found in a new branch within this repository. This version of RAPTOR is described in the following publication:
+
+https://arxiv.org/abs/2007.03045
+
+The polarized branch of RAPTOR is still under construction. Further updates and instructional materials are coming soon.
+
 # QUICK START
 
 > These instructions guide the user in downloading and compiling the source code, and then producing an image-data file with RAPTOR, which can be plotted with the included Python plotting script.
