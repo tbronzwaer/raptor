@@ -8,11 +8,11 @@ ifeq ($(CPU),1)
 ifeq ($(OPENACC),1)
 	CC = pgcc
 	CFLAGS = -acc -Minfo -ta=multicore
-	LDFLAGS = -lm -lgsl -lgslcblas
+	LDFLAGS = -lm -lgsl -lcblas
 else
 	CC = gcc
 	CFLAGS = -fopenmp -std=c99 -I/usr/include -Ofast -Wno-unused-result
-	LDFLAGS = -lm -lgsl -lgslcblas
+	LDFLAGS = -lm -lgsl -lcblas
 endif
 else
 	CC = pgcc
