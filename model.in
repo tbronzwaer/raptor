@@ -2,8 +2,8 @@ MBH         	(g)		8.9505e39
 M_UNIT      	(g)		4.e20
 ABSORPTION	(-)		1
 
-IMG_WIDTH   	(pixels)	200
-IMG_HEIGHT  	(pixels)        200
+IMG_WIDTH   	(pixels)	500
+IMG_HEIGHT  	(pixels)        500
 CAM_SIZE_X  	(Rg)		40
 CAM_SIZE_Y  	(Rg)		40
 FREQS_PER_DEC	(-)		1
