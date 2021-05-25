@@ -105,7 +105,7 @@ real absorption_coeff_kappa_FIT(real nu, real Ne, real Thetae, real B, real beta
         return (factor*A_s);
 }
 
-
+/*
 // Return emissivity j_nu which depends on local plasma parameters
 // Ref. Dolence & Moscibrodzka 2009
 real emission_coeff_THSYNCH(real B, real theta, real THETA_e, real nu_plasma, real n_e){
@@ -123,10 +123,10 @@ real emission_coeff_THSYNCH(real B, real theta, real THETA_e, real nu_plasma, re
     return j_nu;
 }
 
-
+*/
 
 // The function below seems to contain bugs -- I (TB) am not sure where it comes from. Thanks to George Wong at the University of Illinois for pointing this out!
-/*
+
 // Return emissivity j_nu which depends on local plasma parameters
 real emission_coeff_THSYNCH(real B, real theta, real THETA_e, real nu_plasma, real n_e){
         real sth = sqrt(1-theta*theta);
@@ -152,7 +152,7 @@ real emission_coeff_THSYNCH(real B, real theta, real THETA_e, real nu_plasma, re
                     exp(-pow(X,1./3.));
         return j_nu * e2_c;
 }
-*/
+
 
 // Return emission constant j_nu as described in Dexter (2009) (the geokerr paper)
 real emission_coeff_THSYNCHAV(real B, real THETA_e, real nu_p, real n_e){
