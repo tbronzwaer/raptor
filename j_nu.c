@@ -125,7 +125,6 @@ real emission_coeff_THSYNCH(real B, real theta, real THETA_e, real nu_plasma, re
 
 */
 
-// The function below seems to contain bugs -- I (TB) am not sure where it comes from. Thanks to George Wong at the University of Illinois for pointing this out!
 
 // Return emissivity j_nu which depends on local plasma parameters
 real emission_coeff_THSYNCH(real B, real theta, real THETA_e, real nu_plasma, real n_e){
