@@ -29,9 +29,9 @@
 
 // Constants that must be evaluated at startup
 // (They depend on spin and other user-supplied parameters)
-real R_GRAV; // Gravitational radius
-real R_ISCO; // Innermost stable circular orbit
-real cutoff_inner; // Inner integration boundary
-real JANSKY_FACTOR; // Factor to scale image output
+extern real R_GRAV; // Gravitational radius
+extern real R_ISCO; // Innermost stable circular orbit
+extern real cutoff_inner; // Inner integration boundary
+extern real JANSKY_FACTOR; // Factor to scale image output
 
 #endif // CONSTANTS_H

@@ -92,6 +92,52 @@
 #include "constants.h"
 #include "parameters.h"
 
+// Global variables defined in constants.h
+real R_GRAV;
+real R_ISCO;
+real cutoff_inner;
+real JANSKY_FACTOR;
+
+// Global variables defined in parameters.h
+real Ucam[4];
+real Xcam[4];
+real tcam;
+real L_unit;
+real T_unit;
+real RHO_unit;
+real U_unit;
+real B_unit;
+real Ne_unit;
+real Thetae_unit;
+real R0, Rin, Rh, Rout, Rms;
+real a;
+real hslope;
+real startx[NDIM], stopx[NDIM], dx[NDIM];
+real dlE, lE0;
+real gam;
+real dMsim;
+real ****p;
+char GRMHD_FILE[256];
+char OUTPUT_FILE[256];
+int SPHERICAL_ACC;
+char TEMP_MODEL[100];
+int ABSORPTION;
+double MBH;
+real M_UNIT;
+real R_HIGH;
+real R_LOW;
+real CAM_FREQ;
+real TIME_INIT;
+real INCLINATION;
+int  FREQS_PER_DEC;
+real FREQ_MIN;
+real FREQ_MAX;
+int IMG_WIDTH;
+int IMG_HEIGHT;
+real CAM_SIZE_X;
+real CAM_SIZE_Y;
+real STEPSIZE;
+
 int main(int argc, char *argv[])
 {
         fprintf(stderr, "WELCOME TO RAPTOR 1.0\n\n");

@@ -59,9 +59,9 @@
 #include "functions.h"
 
 
-int n1, n2, n3;
+extern int n1, n2, n3;
 
-double Ladv, dMact;
+extern double Ladv, dMact;
 
 /* mnemonics for primitive vars; conserved vars */
 #define KRHO     0

@@ -55,21 +55,21 @@ typedef double real;
 #define LINEAR_IMPACT_CAM (1)
 
 //VR parameter
-real Ucam[4];
-real Xcam[4];
-real tcam;
+extern real Ucam[4];
+extern real Xcam[4];
+extern real tcam;
 
 #define sign(x) (((x) < 0) ? -1 : ((x) > 0))
 
 // GLOBAL VARIABLES
 ////////////////////
-real L_unit;
-real T_unit;
-real RHO_unit;
-real U_unit;
-real B_unit;
-real Ne_unit;
-real Thetae_unit;
+extern real L_unit;
+extern real T_unit;
+extern real RHO_unit;
+extern real U_unit;
+extern real B_unit;
+extern real Ne_unit;
+extern real Thetae_unit;
 
 #define NDIM  (4)
 #define NPRIM    (8)
@@ -77,14 +77,14 @@ real Thetae_unit;
 #define N2 (256)
 #define N3 (1)
 
-real R0, Rin, Rh, Rout, Rms;
-real a;
-real hslope;
-real startx[NDIM], stopx[NDIM], dx[NDIM];
-real dlE, lE0;
-real gam;
-real dMsim;
-real ****p;
+extern real R0, Rin, Rh, Rout, Rms;
+extern real a;
+extern real hslope;
+extern real startx[NDIM], stopx[NDIM], dx[NDIM];
+extern real dlE, lE0;
+extern real gam;
+extern real dMsim;
+extern real ****p;
 
 
 // METRIC PARAMETERS
@@ -122,11 +122,11 @@ extern real R0;
 // These are used for light transport computations; BH now has a specific mass
 
 // GRMHD data file
-char GRMHD_FILE[256];
-char OUTPUT_FILE[256];
-int SPHERICAL_ACC;
-char TEMP_MODEL[100];
-int ABSORPTION;
+extern char GRMHD_FILE[256];
+extern char OUTPUT_FILE[256];
+extern int SPHERICAL_ACC;
+extern char TEMP_MODEL[100];
+extern int ABSORPTION;
 
 #define LIGHT_TRANSPORT     (1) // Toggle light transport calculation on/off for integration debugging
 
@@ -134,13 +134,13 @@ int ABSORPTION;
 #define RT_OUTER_CUTOFF     (1.01*rcam) // Outer boundary of radiative transfer computation
 
 // Black hole mass
-double MBH;
+extern double MBH;
 
 //sets all units.
-real M_UNIT;
+extern real M_UNIT;
 
-real R_HIGH;
-real R_LOW;
+extern real R_HIGH;
+extern real R_LOW;
 #define source_dist    (2.6228263e22) // Distance to Sgr A* (cm)
 //#define source_dist    (5.061e25) // Distance to M87 (cm)
 
@@ -156,27 +156,27 @@ real R_LOW;
 // OBSERVER PARAMETERS
 //////////////////////
 
-real CAM_FREQ;
-real TIME_INIT;
-real INCLINATION;
+extern real CAM_FREQ;
+extern real TIME_INIT;
+extern real INCLINATION;
 
 // SED parameters
-int    FREQS_PER_DEC;
-real FREQ_MIN;
-real FREQ_MAX;
+extern int  FREQS_PER_DEC;
+extern real FREQ_MIN;
+extern real FREQ_MAX;
 
 
 //	#define rcam         (15.)//(500.)    // Camera distance from the sing.(units of Rg)
 #define rcam         (1.e4)
-int IMG_WIDTH;
-int IMG_HEIGHT;
-real CAM_SIZE_X;
-real CAM_SIZE_Y;
+extern int IMG_WIDTH;
+extern int IMG_HEIGHT;
+extern real CAM_SIZE_X;
+extern real CAM_SIZE_Y;
 #define max_order    (100)       // Maximimum order of lensed image computed (0 = direct only)
 
 // INTEGRATOR PARAMETERS
 ////////////////////////
-real STEPSIZE;
+extern real STEPSIZE;
 
 #define delta_num    (1.e-7)    // Used for numerical derivatives
 #define max_steps    (1e5)   // Maximum number of integration steps
