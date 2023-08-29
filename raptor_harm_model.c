@@ -56,6 +56,9 @@
 #include "functions.h"
 #include "parameters.h"
 
+int n1, n2, n3;
+double Ladv, dMact;
+
 void init_model(){
         // Set physical units
         set_units(M_UNIT);
